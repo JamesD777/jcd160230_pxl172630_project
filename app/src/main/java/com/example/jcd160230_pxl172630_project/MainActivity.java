@@ -48,12 +48,12 @@ public class MainActivity extends AppCompatActivity {
         BufferedReader reader = null;
         try {
             //Scanner scanner = new Scanner(new File(contactsFile));
-            InputStreamReader inputreader = new InputStreamReader((getAssets().open("assets://contacts.txt")));
+            InputStreamReader inputreader = new InputStreamReader((getAssets().open("contacts.txt")));
             reader = new BufferedReader(inputreader);
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] row = line.split("\\t");
-                contactsArray.add(new Contact(row[1], row[2], row[3], row[4], row[5]));
+                contactsArray.add(new Contact(row[0], row[1], row[2], row[3], row[4]));
             }
         }
         catch (Exception e) {

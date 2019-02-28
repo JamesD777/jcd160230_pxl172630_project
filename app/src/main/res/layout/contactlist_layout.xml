@@ -10,14 +10,12 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="18"
-        android:gravity="center"
         android:text="@string/first_name" />
     <TextView
         android:id="@+id/lName"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="18"
-        android:gravity="center"
         android:text="@string/last_name" />
     <TextView
         android:id="@+id/phone"
