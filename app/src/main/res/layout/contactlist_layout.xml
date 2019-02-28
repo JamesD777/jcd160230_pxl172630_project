@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:weightSum="100">
+
+    <TextView
+        android:id="@+id/fName"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="18"
+        android:text="@string/first_name" />
+    <TextView
+        android:id="@+id/lName"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="18"
+        android:text="@string/last_name" />
+    <TextView
+        android:id="@+id/phone"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="24"
+        android:gravity="center"
+        android:text="@string/phone_number"/>
+    <TextView
+        android:id="@+id/bDate"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="20"
+        android:gravity="center"
+        android:text="@string/birth_date"/>
+    <TextView
+        android:id="@+id/aDate"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="20"
+        android:gravity="center"
+        android:text="@string/date_added" />
+
+</LinearLayout>
