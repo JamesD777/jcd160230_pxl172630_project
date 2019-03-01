@@ -23,7 +23,7 @@ public class clickDate extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_click_date, container, false);
         TextView textView = (TextView)v.findViewById(R.id.textView);
-        textView.setText(getTag() + " ");
+        textView.setText(getTag());
         return v;
 
     }
