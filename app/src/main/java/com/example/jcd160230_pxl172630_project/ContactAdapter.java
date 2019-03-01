@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ContactAdapter extends BaseAdapter {
@@ -22,7 +23,7 @@ public class ContactAdapter extends BaseAdapter {
     public int getCount() {
         return contactList.size();
     }
-    public Object getItem(int position) {
+    public Contact getItem(int position) {
         return contactList.get(position);
     }
     public long getItemId(int position) {
@@ -31,9 +32,9 @@ public class ContactAdapter extends BaseAdapter {
     static class ContactHolder {
         TextView firstName;
         TextView lastName;
-        TextView phoneNumber;
-        TextView birthDate;
-        TextView dateAdded;
+        //TextView phoneNumber;
+        //TextView birthDate;
+        //TextView dateAdded;
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -44,9 +45,9 @@ public class ContactAdapter extends BaseAdapter {
             holder = new ContactHolder();
             holder.firstName = (TextView) convertView.findViewById(R.id.fName);
             holder.lastName = (TextView) convertView.findViewById(R.id.lName);
-            holder.phoneNumber = (TextView) convertView.findViewById(R.id.phone);
-            holder.birthDate = (TextView) convertView.findViewById(R.id.bDate);
-            holder.dateAdded = (TextView) convertView.findViewById(R.id.aDate);
+            //holder.phoneNumber = (TextView) convertView.findViewById(R.id.phone);
+            //holder.birthDate = (TextView) convertView.findViewById(R.id.bDate);
+            //holder.dateAdded = (TextView) convertView.findViewById(R.id.aDate);
 
             convertView.setTag(holder);
         }
@@ -55,9 +56,9 @@ public class ContactAdapter extends BaseAdapter {
         }
         holder.firstName.setText(contactList.get(position).getFirstName());
         holder.lastName.setText(contactList.get(position).getLastName());
-        holder.phoneNumber.setText(contactList.get(position).getPhoneNumber());
-        holder.birthDate.setText(contactList.get(position).getBirthDate());
-        holder.dateAdded.setText(contactList.get(position).getDateAdded());
+        //holder.phoneNumber.setText(contactList.get(position).getPhoneNumber());
+        //holder.birthDate.setText(contactList.get(position).getBirthDate());
+        //holder.dateAdded.setText(contactList.get(position).getDateAdded());
 
         return convertView;
     }

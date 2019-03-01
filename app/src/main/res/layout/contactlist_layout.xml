@@ -6,37 +6,18 @@
     android:weightSum="100">
 
     <TextView
-        android:id="@+id/fName"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="18"
-        android:text="@string/first_name" />
-    <TextView
         android:id="@+id/lName"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="18"
+        android:layout_weight="55"
+        android:textSize="@dimen/contact_textsize"
         android:text="@string/last_name" />
     <TextView
-        android:id="@+id/phone"
+        android:id="@+id/fName"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="24"
-        android:gravity="center"
-        android:text="@string/phone_number"/>
-    <TextView
-        android:id="@+id/bDate"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="20"
-        android:gravity="center"
-        android:text="@string/birth_date"/>
-    <TextView
-        android:id="@+id/aDate"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="20"
-        android:gravity="center"
-        android:text="@string/date_added" />
+        android:layout_weight="45"
+        android:textSize="@dimen/contact_textsize"
+        android:text="@string/first_name" />
 
 </LinearLayout>

@@ -1,6 +1,9 @@
 package com.example.jcd160230_pxl172630_project;
 
-public class Contact {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Contact implements Parcelable {
     private String firstName;
     private String lastName;
     private String phoneNumber;
@@ -44,4 +47,38 @@ public class Contact {
     public String getDateAdded() {
         return dateAdded;
     }
+
+    // Parcelable implementation
+    public Contact(Parcel parcel) {
+        this.firstName = parcel.readString();
+        this.lastName = parcel.readString();
+        this.phoneNumber = parcel.readString();
+        this.birthDate = parcel.readString();
+        this.dateAdded = parcel.readString();
+    }
+    public int describeContents() {
+        return 0;
+    }
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(firstName);
+        dest.writeString(lastName);
+        dest.writeString(phoneNumber);
+        dest.writeString(birthDate);
+        dest.writeString(dateAdded);
+    }
+    public void readFromParcel(Parcel in) {
+        firstName = in.readString();
+        lastName = in.readString();
+        phoneNumber = in.readString();
+        birthDate = in.readString();
+        dateAdded = in.readString();
+    }
+    public static Creator<Contact> CREATOR = new Creator<Contact>() {
+        public Contact createFromParcel(Parcel source) {
+            return new Contact(source);
+        }
+        public Contact[] newArray(int size) {
+            return new Contact[size];
+        }
+    };
 }
