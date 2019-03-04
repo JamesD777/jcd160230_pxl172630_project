@@ -1,5 +1,16 @@
+/******************************************************************************
+ * This is an application written for 4301.002, to display a contact list in an
+ * android app that is modifiable by the user. It has a list that opens up a
+ * specific contact's info when you click their name. This contact information
+ * can be modified by the user and is saved when the save button is clicked.
+ *
+ * Written by James Dunlap(jcd160230) and Perry Lee (pxl172630) at The University
+ * of Texas at Dallas starting March 4, 2019, for an Android development course.
+ ******************************************************************************/
+
 package com.example.jcd160230_pxl172630_project;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,8 +23,11 @@ import android.widget.ListView;
 import android.support.v7.widget.Toolbar;
 
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -23,12 +37,14 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Contact> contactsArrayList = new ArrayList<Contact>();
     ListView contactListView;
     ContactAdapter contactAdapter;
+    int editedPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Create toolbar and add "New" clickable menu button
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -46,9 +62,10 @@ public class MainActivity extends AppCompatActivity {
         populateList();
     }
 
+    // Function to read in the file and populate the ListView using custom adapter
     private void populateList() {
         // Load file by calling contactsFile()
-        contactsArrayList = contactsFile(contactsFile);
+        contactsArrayList = readContactsFile(contactsFile);
         System.out.println("ArrayList: " + contactsArrayList);
 
         // Create ListView and set to cList
@@ -72,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Contact contact = (Contact)parent.getItemAtPosition(position);
+                editedPosition = position;
                 System.out.println(contact.getFirstName());
 
                 Intent intent = new Intent(MainActivity.this, Main2Activity.class);
@@ -82,7 +100,8 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("Populate List");
     }
 
-    private ArrayList contactsFile(String contactsFile) {
+    // Read contacs from file and set to ArrayList
+    private ArrayList readContactsFile(String contactsFile) {
         ArrayList<Contact> contactsArray = new ArrayList<>();
         BufferedReader reader = null;
         InputStreamReader inputreader = null;
@@ -113,6 +132,19 @@ public class MainActivity extends AppCompatActivity {
         }
         return contactsArray;
     }
+    // Write newly constructed contacts Array:ist and write to file.
+    public void writeContactsFile(ArrayList<Contact> contactsArrayList) {
+        try {
+            FileOutputStream fileOutputStream = openFileOutput(contactsFile, Context.MODE_PRIVATE);
+            ObjectOutputStream out = new ObjectOutputStream(fileOutputStream);
+            out.writeObject(contactsArrayList);
+            out.close();
+            fileOutputStream.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     // Create new contact
     @Override
@@ -122,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    // Create "New Contact"
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -153,11 +186,23 @@ public class MainActivity extends AppCompatActivity {
         contactAdapter.notifyDataSetChanged();
     }
 
+    // Receive data from Main2Activity and construct new contacts ArrayList
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        System.out.println("ON ACTIVITY RESULT");
         if(resultCode == RESULT_OK) {
             Contact saveContact;
-            saveContact = this.getIntent().getExtras().getParcelable("saveContact");
-
+            saveContact = data.getExtras().getParcelable("saveContact");
+            System.out.println("ON ACTIVITY RESULT SUCCESS");
+            if(saveContact.getFirstName() == "") {
+                contactsArrayList.remove(editedPosition);
+                writeContactsFile(contactsArrayList);
+                System.out.println("Name changed to: " + contactsArrayList.get(editedPosition).getFirstName());
+            }
+            else {
+                contactsArrayList.set(editedPosition, saveContact);
+                writeContactsFile(contactsArrayList);
+                System.out.println("Name changed to: " + contactsArrayList.get(editedPosition).getFirstName());
+            }
         }
     }
 }

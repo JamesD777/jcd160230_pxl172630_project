@@ -29,6 +29,7 @@ public class Main2Activity extends AppCompatActivity {
     EditText et;
     Contact selectedContact;
     clickDate dob;
+    int resultCode = 1;
 
     /****************************************************************************
      * Create the second activity and populate it with the contact given.
@@ -43,6 +44,7 @@ public class Main2Activity extends AppCompatActivity {
         //set up date fragments
         getSupportFragmentManager().beginTransaction().add(R.id.frameLayout, new clickDate(), "DOB").commit();
         getSupportFragmentManager().beginTransaction().add(R.id.frameLayout2, new clickDate(), "DOC").commit();
+
         //populate the contact's info into the view
         edit = (TextInputEditText) findViewById(R.id.textInputEdit);
         edit.setText(selectedContact.getFirstName());
@@ -94,10 +96,12 @@ public class Main2Activity extends AppCompatActivity {
         selectedContact.setPhoneNumber("");
         selectedContact.setBirthDate("");
         selectedContact.setDateAdded("");
+
         //send the updated info back to the main activity
         Intent intent = new Intent(Main2Activity.this, MainActivity.class);
         intent.putExtra("saveContact", selectedContact);
         setResult(RESULT_OK, intent);
+        startActivityForResult(intent, resultCode);
         finish();
     }
     /****************************************************************************
@@ -114,10 +118,12 @@ public class Main2Activity extends AppCompatActivity {
         selectedContact.setPhoneNumber(et.getText().toString());
         selectedContact.setBirthDate(dobDate);
         selectedContact.setDateAdded(docDate);
+
         //send the updated info back to the main activity
         Intent intent = new Intent(Main2Activity.this, MainActivity.class);
         intent.putExtra("saveContact", selectedContact);
         setResult(RESULT_OK, intent);
+        startActivityForResult(intent, resultCode);
         finish();
     }
     /****************************************************************************
