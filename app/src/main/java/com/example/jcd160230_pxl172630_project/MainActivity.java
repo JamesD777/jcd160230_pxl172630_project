@@ -153,7 +153,11 @@ public class MainActivity extends AppCompatActivity {
         contactAdapter.notifyDataSetChanged();
     }
 
-    //public class sortLastName implements Comparator<Contact> {
-    //    public int compare()
-    //}
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode == RESULT_OK) {
+            Contact saveContact;
+            saveContact = this.getIntent().getExtras().getParcelable("saveContact");
+
+        }
+    }
 }

@@ -4,6 +4,7 @@ package com.example.jcd160230_pxl172630_project;
 
 
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -76,6 +77,8 @@ public class Main2Activity extends AppCompatActivity {
         selectedContact.setPhoneNumber("");
         selectedContact.setBirthDate("");
         selectedContact.setDateAdded("");
+        Intent intent = new Intent(Main2Activity.this, MainActivity.class);
+
     }
 
     public void onSave(View view) {
@@ -87,6 +90,9 @@ public class Main2Activity extends AppCompatActivity {
         selectedContact.setPhoneNumber(et.getText().toString());
         selectedContact.setBirthDate(dobDate);
         selectedContact.setDateAdded(docDate);
+        Intent intent = new Intent(Main2Activity.this, MainActivity.class);
+        intent.putExtra("saveContact", selectedContact);
+        setResult(RESULT_OK, intent);
     }
 
     public void afterFragmentComplete(){
