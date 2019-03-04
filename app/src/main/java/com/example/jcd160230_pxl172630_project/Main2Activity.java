@@ -6,9 +6,12 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 /******************************************************************************
@@ -38,19 +41,34 @@ public class Main2Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+
+
         //get the contact's info
-        selectedContact = this.getIntent().getExtras().getParcelable("sendContact");
-        //set up date fragments
+        if(getIntent().getExtras() != null) {
+            selectedContact = this.getIntent().getExtras().getParcelable("sendContact");
+            //set up date fragments
+            //getSupportFragmentManager().beginTransaction().add(R.id.frameLayout, new clickDate(), "DOB").commit();
+            //getSupportFragmentManager().beginTransaction().add(R.id.frameLayout2, new clickDate(), "DOC").commit();
+
+            //populate the contact's info into the view
+            edit = (TextInputEditText) findViewById(R.id.textInputEdit);
+            edit.setText(selectedContact.getFirstName());
+            edit = (TextInputEditText) findViewById(R.id.textInputEdit2);
+            edit.setText(selectedContact.getLastName());
+            et = (EditText) findViewById(R.id.editText3);
+            et.setText(selectedContact.getPhoneNumber());
+        }
+        else {
+            selectedContact = new Contact();
+            Button disable = (Button)findViewById(R.id.DeleteBtn);
+            disable.setEnabled(false);
+
+            //set up date fragments
+            //getSupportFragmentManager().beginTransaction().add(R.id.frameLayout, new clickDate(), "DOB").commit();
+            //getSupportFragmentManager().beginTransaction().add(R.id.frameLayout2, new clickDate(), "DOC").commit();
+        }
         getSupportFragmentManager().beginTransaction().add(R.id.frameLayout, new clickDate(), "DOB").commit();
         getSupportFragmentManager().beginTransaction().add(R.id.frameLayout2, new clickDate(), "DOC").commit();
-
-        //populate the contact's info into the view
-        edit = (TextInputEditText) findViewById(R.id.textInputEdit);
-        edit.setText(selectedContact.getFirstName());
-        edit = (TextInputEditText) findViewById(R.id.textInputEdit2);
-        edit.setText(selectedContact.getLastName());
-        et = (EditText) findViewById(R.id.editText3);
-        et.setText(selectedContact.getPhoneNumber());
     }
     /****************************************************************************
      * Opens the datepicker fragment, naming it based on the corresponding date field
@@ -117,21 +135,40 @@ public class Main2Activity extends AppCompatActivity {
         selectedContact.setBirthDate(dobDate);
         selectedContact.setDateAdded(docDate);
 
-        //send the updated info back to the main activity
-        Intent intent = new Intent(Main2Activity.this, MainActivity.class);
-        intent.putExtra("saveContact", selectedContact);
-        setResult(RESULT_OK, intent);
-        finish();
+        if(selectedContact.getFirstName().equals("") && selectedContact.getLastName().equals("")) {
+            Toast toast = Toast.makeText(getApplicationContext(), "Please fill in a name!", Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+            toast.show();
+        }
+        else {
+            //send the updated info back to the main activity
+            Intent intent = new Intent(Main2Activity.this, MainActivity.class);
+            intent.putExtra("saveContact", selectedContact);
+            setResult(RESULT_OK, intent);
+            finish();
+        }
     }
     /****************************************************************************
      * Once the clickDate fragment is created, set the initial dates
      * Author: James Dunlap
      * ****************************************************************************/
     public void afterFragmentComplete(){
+        String storedBirthDate = selectedContact.getBirthDate();
+        String storedDateAdded = selectedContact.getDateAdded();
+        String defaultDate = "01/01/1900";
         //update the date fragments
-        dobDate = selectedContact.getBirthDate();
-        docDate = selectedContact.getDateAdded();
-        this.setText(selectedContact.getBirthDate(), "DOB");
-        this.setText(selectedContact.getDateAdded(), "DOC");
+        if(selectedContact.getBirthDate() != null && selectedContact.getDateAdded() != null) {
+            dobDate = storedDateAdded;
+            docDate = storedBirthDate;
+            this.setText(storedBirthDate, "DOB");
+            this.setText(storedDateAdded, "DOC");
+        }
+        else {
+            dobDate = defaultDate;
+            docDate = defaultDate;
+            this.setText(defaultDate, "DOB");
+            this.setText(defaultDate, "DOC");
+        }
+
     }
 }

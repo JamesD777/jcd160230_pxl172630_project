@@ -14,6 +14,7 @@ public class ContactAdapter extends BaseAdapter {
     private List<Contact> contactList;
     private LayoutInflater inflater;
 
+    // Constructor
     public ContactAdapter(Context context, ArrayList<Contact> contactList) {
         this.contactList = contactList;
         inflater = LayoutInflater.from(context);
@@ -32,11 +33,9 @@ public class ContactAdapter extends BaseAdapter {
     static class ContactHolder {
         TextView firstName;
         TextView lastName;
-        //TextView phoneNumber;
-        //TextView birthDate;
-        //TextView dateAdded;
     }
 
+    // Get View and inflate
     public View getView(int position, View convertView, ViewGroup parent) {
         ContactHolder holder;
 
@@ -45,9 +44,6 @@ public class ContactAdapter extends BaseAdapter {
             holder = new ContactHolder();
             holder.firstName = (TextView) convertView.findViewById(R.id.fName);
             holder.lastName = (TextView) convertView.findViewById(R.id.lName);
-            //holder.phoneNumber = (TextView) convertView.findViewById(R.id.phone);
-            //holder.birthDate = (TextView) convertView.findViewById(R.id.bDate);
-            //holder.dateAdded = (TextView) convertView.findViewById(R.id.aDate);
 
             convertView.setTag(holder);
         }
@@ -56,16 +52,7 @@ public class ContactAdapter extends BaseAdapter {
         }
         holder.firstName.setText(contactList.get(position).getFirstName());
         holder.lastName.setText(contactList.get(position).getLastName());
-        //holder.phoneNumber.setText(contactList.get(position).getPhoneNumber());
-        //holder.birthDate.setText(contactList.get(position).getBirthDate());
-        //holder.dateAdded.setText(contactList.get(position).getDateAdded());
 
         return convertView;
-    }
-
-    public void updateList(List<Contact> newlist) {
-        contactList.clear();
-        contactList.addAll(newlist);
-        this.notifyDataSetChanged();
     }
 }

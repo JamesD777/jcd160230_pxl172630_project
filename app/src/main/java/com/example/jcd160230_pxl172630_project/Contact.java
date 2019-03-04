@@ -11,7 +11,12 @@ public class Contact implements Parcelable {
     private String phoneNumber;
     private String birthDate;
     private String dateAdded;
+    private boolean deleteFlag;
 
+    public Contact() {
+        // Empty constructor
+    }
+    // Basic constructor
     public Contact(String fName, String lName, String phone, String bDate, String aDate) {
         this.firstName = fName;
         this.lastName = lName;
@@ -19,6 +24,8 @@ public class Contact implements Parcelable {
         this.birthDate = bDate;
         this.dateAdded = aDate;
     }
+
+    // Getters and setters
     public void setFirstName(String fName) {
         this.firstName = fName;
     }

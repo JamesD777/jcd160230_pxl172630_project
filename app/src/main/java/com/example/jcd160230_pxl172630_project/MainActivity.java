@@ -12,29 +12,24 @@ package com.example.jcd160230_pxl172630_project;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Parcel;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.support.v7.widget.Toolbar;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.ObjectOutputStream;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity {
     String contactsFile = "contacts.txt";
@@ -45,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CODE = 1;
     private File dir;
     PrintWriter pw = null;
-    String strFilename = "contacts.txt";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,38 +50,26 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Allow file permissions
-        //if(ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-        //    requestPermissions(new String[] {
-        //            Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-        //}
-        //Fragment f = new Fragment();
-        //FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        //        fragmentTransaction.add(R.id.container, this.f);
-        //        fragmentTransaction.commit();
-
-        // Read in file and apply to ListView
-        populateList();
+        // Initialize the global ArrayList and add data to it
+        contactsArrayList = createDummyData();
+        ArrayList<Contact> test = readContactsFile(1);
     }
 
     // Function to read in the file and populate the ListView using custom adapter
-    private void populateList() {
-        // Load file by calling contactsFile()
-        contactsArrayList = readContactsFile(contactsFile);
-        System.out.println("ArrayList: " + contactsArrayList.toString());
+    private ArrayList<Contact> populateList(ArrayList<Contact> contactsAL) {
 
         // Create ListView and set to cList
         contactListView = (ListView)findViewById(R.id.cList);
 
         // Sort the ListView
-        Collections.sort(contactsArrayList, new Comparator<Contact>() {
+        Collections.sort(contactsAL, new Comparator<Contact>() {
             public int compare(Contact lhs, Contact rhs) {
                 return lhs.getLastName().compareTo(rhs.getLastName());
             }
         });
 
         // Create ContactAdapter
-        contactAdapter = new ContactAdapter(MainActivity.this, contactsArrayList);
+        contactAdapter = new ContactAdapter(MainActivity.this, contactsAL);
 
         // Set adapter to ContactAdapter
         contactListView.setAdapter(contactAdapter);
@@ -102,67 +84,66 @@ public class MainActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(MainActivity.this, Main2Activity.class);
                 intent.putExtra("sendContact", contact);
-                startActivityForResult(intent, REQUEST_CODE);
+                MainActivity.this.startActivityForResult(intent, REQUEST_CODE);
             }
         });
         System.out.println("Populate List");
+        return contactsAL;
     }
 
     // Read contacts from file and set to ArrayList
-    private ArrayList readContactsFile(String contactsFile) {
+    private ArrayList readContactsFile(int whichData) {
         ArrayList<Contact> contactsArray = new ArrayList<>();
-        BufferedReader reader = null;
-        InputStreamReader inputreader = null;
+
         try {
-            inputreader = new InputStreamReader((getAssets().open("contacts.txt")));
-            reader = new BufferedReader(inputreader);
+            FileInputStream file = openFileInput(contactsFile);
+            InputStreamReader inputReader;
+            if(whichData == 0) {
+                inputReader = new InputStreamReader((getAssets().open("contacts.txt")));
+            }
+            else {
+                inputReader = new InputStreamReader(file);
+            }
+            BufferedReader reader = new BufferedReader(inputReader);
+
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] row = line.split("\\t");
                 contactsArray.add(new Contact(row[0], row[1], row[2], row[3], row[4]));
                 System.out.println(row[0]);
             }
-            reader.close();
-            inputreader.close();
+            //reader.close();
+            inputReader.close();
+            file.close();
         }
         catch (Exception e) {
             e.printStackTrace();
         }
-        finally {
-            if(reader != null) {
-                try {
-                    reader.close();
-                    inputreader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
         return contactsArray;
     }
-    // Write newly constructed contacts Array:ist and write to file.
-    public void writeContactsFile(ArrayList<Contact> contactsArrayList) {
+    // Write newly constructed contacts ArrayList and write to file.
+    public void writeContactsFile(Context context, ArrayList<Contact> contactsArrayList) {
+        File findFile = new File(context.getFilesDir(), contactsFile);
+
         try {
-            //FileOutputStream fileOutputStream = openFileOutput(contactsFile, Context.MODE_PRIVATE);
-            dir = new File(this.getFilesDir(), strFilename);
+            dir = new File(context.getFilesDir(), contactsFile);
             pw = new PrintWriter(dir);
 
-            for (Contact c: contactsArrayList) {
-                System.out.println(c.getFirstName() + " " + c.getLastName() + "\t" + c.getPhoneNumber() + "\t" + c.getBirthDate() + "\t" + c.getDateAdded());
-                pw.println(c.getFirstName() + " " + c.getLastName() + "\t" + c.getPhoneNumber() + "\t" + c.getBirthDate() + "\t" + c.getDateAdded());
+            FileInputStream file = openFileInput(contactsFile);
+            InputStreamReader inputReader = new InputStreamReader(file);
+            BufferedReader reader = new BufferedReader(inputReader);
+            FileOutputStream fileOutput = openFileOutput(contactsFile, Context.MODE_PRIVATE);
+            for(Contact c: contactsArrayList) {
+                String row = c.getFirstName() + "\t" + c.getLastName() + "\t" + c.getPhoneNumber() + "\t" + c.getBirthDate() + "\t" + c.getDateAdded();
+                System.out.println("Write: " + row);
+                pw.println(row);
             }
-
             pw.close();
-
-            //ObjectOutputStream out = new ObjectOutputStream(fileOutputStream);
-            //out.writeObject(contactsArrayList);
-            //out.close();
-            //fileOutputStream.close();
+            fileOutput.close();
         }
-        catch (IOException e) {
+        catch (Exception e) {
             e.printStackTrace();
         }
-        //populateList();
     }
 
     // Create new contact
@@ -184,45 +165,43 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.create_newcontact) {
             Intent intent = new Intent(MainActivity.this, Main2Activity.class);
-            startActivityForResult(intent, REQUEST_CODE);
+            MainActivity.this.startActivityForResult(intent, REQUEST_CODE);
+            editedPosition = contactsArrayList.size() + 1;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    public void onResume() {
-        super.onResume();
-        System.out.println("On Resume");
-
-        /*ArrayList newContactList = new ArrayList<Contact>();
-        newContactList = contactsFile(contactsFile);
-        ContactAdapter newContactAdapter = new ContactAdapter(MainActivity.this, newContactList);
-        contactListView.setAdapter(newContactAdapter);*/
-        //contactAdapter.updateList(newContactList);
-        //contactsArrayList.clear();
-        //contactsArrayList.addAll(contactsFile(contactsFile));
-        populateList();
-        contactAdapter.notifyDataSetChanged();
-    }
-
     // Receive data from Main2Activity and construct new contacts ArrayList
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        System.out.println("ON ACTIVITY RESULT");
+        super.onActivityResult(requestCode, resultCode, data);
+        contactsArrayList = readContactsFile(1);
+
         if(resultCode == RESULT_OK) {
             Contact saveContact;
             saveContact = data.getExtras().getParcelable("saveContact");
-            System.out.println("ON ACTIVITY RESULT SUCCESS");
-            if(saveContact.getFirstName() == "") {
+
+            if(saveContact.getFirstName().equals("")) {
                 contactsArrayList.remove(editedPosition);
-                writeContactsFile(contactsArrayList);
-                System.out.println("Name changed to: " + contactsArrayList.get(editedPosition).getFirstName());
+            }
+            else if (editedPosition > contactsArrayList.size()) {
+                contactsArrayList.add(saveContact);
             }
             else {
                 contactsArrayList.set(editedPosition, saveContact);
-                writeContactsFile(contactsArrayList);
-                System.out.println("Name changed to: " + contactsArrayList.get(editedPosition).getFirstName());
             }
         }
+        populateList(contactsArrayList);
+        writeContactsFile(this, contactsArrayList);
+    }
+
+    // Fill file with dummy data from assets to work with
+    public ArrayList<Contact> createDummyData() {
+        ArrayList<Contact> dummyContacts;
+        dummyContacts = readContactsFile(0);
+        dummyContacts = populateList(dummyContacts);
+        writeContactsFile(this, dummyContacts);
+        return dummyContacts;
     }
 }
