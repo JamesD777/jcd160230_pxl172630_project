@@ -7,14 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-/******************************************************************************
- * This is a Pong game, called Paddle Ball, that lets you play with a tennis
- * ball in a court that is the screen width wide and high.  One or two people
- * can play, and the speed of the ball can be adjusted with a slider.
- *
- * Written by John Cole at The University of Texas at Dallas starting June 13,
- * 2013, for a summer workshop in Android development.
- ******************************************************************************/
 
 public class clickDate extends Fragment {
 
@@ -23,7 +15,10 @@ public class clickDate extends Fragment {
     }
 
     View v;
-
+    /****************************************************************************
+     * Create the first fragment that shows on main2activity and populate it
+     * Author: James Dunlap
+     * ****************************************************************************/
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //set the view
@@ -34,7 +29,10 @@ public class clickDate extends Fragment {
         return v;
 
     }
-
+    /****************************************************************************
+     * Set the data of the textview, used from outside this fragment
+     * Author: James Dunlap
+     * ****************************************************************************/
     public void setText(String dob){
         TextView textView = (TextView)v.findViewById(R.id.textView);
         textView.setText(dob);
@@ -43,7 +41,10 @@ public class clickDate extends Fragment {
     public void openDatePicker(View view) {
         // Required empty onclick function that is ignored
     }
-
+    /****************************************************************************
+     * Populate the initial data only after the fragment is created
+     * Author: James Dunlap
+     * ****************************************************************************/
     @Override
     public void onResume() {
         super.onResume();

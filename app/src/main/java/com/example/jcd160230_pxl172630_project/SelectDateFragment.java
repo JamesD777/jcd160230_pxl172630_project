@@ -7,18 +7,13 @@ import android.support.v4.app.DialogFragment;
 import android.widget.DatePicker;
 import java.util.Calendar;
 
-/******************************************************************************
- * This is a Pong game, called Paddle Ball, that lets you play with a tennis
- * ball in a court that is the screen width wide and high.  One or two people
- * can play, and the speed of the ball can be adjusted with a slider.
- *
- * Written by John Cole at The University of Texas at Dallas starting June 13,
- * 2013, for a summer workshop in Android development.
- ******************************************************************************/
 
 public class SelectDateFragment extends DialogFragment{
     DatePickerDialog picker;
-
+    /****************************************************************************
+     * Create the third activity, a calendar date picker which lets you select a date
+     * Author: James Dunlap
+     * ****************************************************************************/
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         //show a calendar

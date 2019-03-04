@@ -12,12 +12,13 @@ import android.widget.TextView;
 
 
 /******************************************************************************
- * This is a Pong game, called Paddle Ball, that lets you play with a tennis
- * ball in a court that is the screen width wide and high.  One or two people
- * can play, and the speed of the ball can be adjusted with a slider.
+ * This is an application written for 4301.002, to display a contact list in an
+ * android app that is modifiable by the user. It has a list that opens up a
+ * specific contact's info when you click their name. This contact information
+ * can be modified by the user and is saved when the save button is clicked.
  *
- * Written by John Cole at The University of Texas at Dallas starting June 13,
- * 2013, for a summer workshop in Android development.
+ * Written by James Dunlap(jcd160230) and Perry Lee (pxl172630) at The University
+ * of Texas at Dallas starting March 4, 2019, for an Android development course.
  ******************************************************************************/
 
 public class Main2Activity extends AppCompatActivity {
@@ -29,6 +30,10 @@ public class Main2Activity extends AppCompatActivity {
     Contact selectedContact;
     clickDate dob;
 
+    /****************************************************************************
+     * Create the second activity and populate it with the contact given.
+     * Author: James Dunlap
+     * ****************************************************************************/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +51,10 @@ public class Main2Activity extends AppCompatActivity {
         et = (EditText) findViewById(R.id.editText3);
         et.setText(selectedContact.getPhoneNumber());
     }
-
+    /****************************************************************************
+     * Opens the datepicker fragment, naming it based on the corresponding date field
+     * Author: James Dunlap
+     * ****************************************************************************/
     public void openDatePicker(View view) {
         //create a date picker fragment
         DialogFragment newFragment = new SelectDateFragment();
@@ -59,7 +67,10 @@ public class Main2Activity extends AppCompatActivity {
             newFragment.show(getSupportFragmentManager(), "DOC ");
         }
     }
-
+    /****************************************************************************
+     * Sets the text from the datepicker to the clickDate fragment
+     * Author: James Dunlap
+     * ****************************************************************************/
     public void setText(String date, String tag){
         //set the text of the selected date to the clickDate fragment
         dob = (clickDate) getSupportFragmentManager().findFragmentByTag(tag.trim());
@@ -72,7 +83,10 @@ public class Main2Activity extends AppCompatActivity {
             this.docDate = date;
         }
     }
-
+    /****************************************************************************
+     * When the delete button is clicked, clear the data of the contact and return
+     * Author: James Dunlap
+     * ****************************************************************************/
     public void onDelete(View view) {
         //update the selected contact with empty values
         selectedContact.setFirstName("");
@@ -86,7 +100,10 @@ public class Main2Activity extends AppCompatActivity {
         setResult(RESULT_OK, intent);
         finish();
     }
-
+    /****************************************************************************
+     * When the save button is clicked, save the edited data and return
+     * Author: James Dunlap
+     * ****************************************************************************/
     public void onSave(View view) {
         //update the selected contact
         edit = (TextInputEditText) findViewById(R.id.textInputEdit);
@@ -103,7 +120,10 @@ public class Main2Activity extends AppCompatActivity {
         setResult(RESULT_OK, intent);
         finish();
     }
-
+    /****************************************************************************
+     * Once the clickDate fragment is created, set the initial dates
+     * Author: James Dunlap
+     * ****************************************************************************/
     public void afterFragmentComplete(){
         //update the date fragments
         dobDate = selectedContact.getBirthDate();
