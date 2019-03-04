@@ -3,6 +3,8 @@ package com.example.jcd160230_pxl172630_project;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.io.Serializable;
+
 public class Contact implements Parcelable {
     private String firstName;
     private String lastName;

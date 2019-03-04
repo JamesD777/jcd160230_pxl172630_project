@@ -12,6 +12,7 @@ package com.example.jcd160230_pxl172630_project;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Parcel;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     ListView contactListView;
     ContactAdapter contactAdapter;
     int editedPosition;
+    private static final int REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(MainActivity.this, Main2Activity.class);
                 intent.putExtra("sendContact", contact);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE);
             }
         });
         System.out.println("Populate List");
@@ -165,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.create_newcontact) {
             Intent intent = new Intent(MainActivity.this, Main2Activity.class);
-            startActivity(intent);
+            startActivityForResult(intent, REQUEST_CODE);
         }
 
         return super.onOptionsItemSelected(item);
@@ -187,6 +189,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Receive data from Main2Activity and construct new contacts ArrayList
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         System.out.println("ON ACTIVITY RESULT");
         if(resultCode == RESULT_OK) {

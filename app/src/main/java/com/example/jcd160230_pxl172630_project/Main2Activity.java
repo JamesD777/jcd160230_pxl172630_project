@@ -29,7 +29,6 @@ public class Main2Activity extends AppCompatActivity {
     EditText et;
     Contact selectedContact;
     clickDate dob;
-    int resultCode = 1;
 
     /****************************************************************************
      * Create the second activity and populate it with the contact given.
@@ -101,7 +100,6 @@ public class Main2Activity extends AppCompatActivity {
         Intent intent = new Intent(Main2Activity.this, MainActivity.class);
         intent.putExtra("saveContact", selectedContact);
         setResult(RESULT_OK, intent);
-        startActivityForResult(intent, resultCode);
         finish();
     }
     /****************************************************************************
@@ -123,7 +121,6 @@ public class Main2Activity extends AppCompatActivity {
         Intent intent = new Intent(Main2Activity.this, MainActivity.class);
         intent.putExtra("saveContact", selectedContact);
         setResult(RESULT_OK, intent);
-        startActivityForResult(intent, resultCode);
         finish();
     }
     /****************************************************************************
