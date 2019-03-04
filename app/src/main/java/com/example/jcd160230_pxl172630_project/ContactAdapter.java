@@ -8,7 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class ContactAdapter extends BaseAdapter {
@@ -20,6 +19,7 @@ public class ContactAdapter extends BaseAdapter {
         inflater = LayoutInflater.from(context);
     }
 
+    @Override
     public int getCount() {
         return contactList.size();
     }
@@ -61,5 +61,11 @@ public class ContactAdapter extends BaseAdapter {
         //holder.dateAdded.setText(contactList.get(position).getDateAdded());
 
         return convertView;
+    }
+
+    public void updateList(List<Contact> newlist) {
+        contactList.clear();
+        contactList.addAll(newlist);
+        this.notifyDataSetChanged();
     }
 }
