@@ -14,6 +14,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import static java.lang.Thread.sleep;
+
 public class Main2Activity extends AppCompatActivity {
 
     String dobDate = "DOB";
@@ -32,7 +34,11 @@ public class Main2Activity extends AppCompatActivity {
         //set up date fragments
         getSupportFragmentManager().beginTransaction().add(R.id.frameLayout, new clickDate(), "DOB").commit();
         getSupportFragmentManager().beginTransaction().add(R.id.frameLayout2, new clickDate(), "DOC").commit();
-
+        try {
+            sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         //populate the contact's info into the view
         edit = (TextInputEditText) findViewById(R.id.textInputEdit);
         edit.setText(selectedContact.getFirstName());
@@ -40,16 +46,8 @@ public class Main2Activity extends AppCompatActivity {
         edit.setText(selectedContact.getLastName());
         et = (EditText) findViewById(R.id.editText3);
         et.setText(selectedContact.getPhoneNumber());
-        //dobDate = selectedContact.getBirthDate();
-        //docDate = selectedContact.getDateAdded();
-        //this.setTextDOB(selectedContact.getBirthDate(), "DOB ");
-        //this.setTextDOB(selectedContact.getDateAdded(), "DOC ");
     }
 
-    public void viewDate(View view) {
-        //getSupportFragmentManager().beginTransaction().add(R.id.container, new clickDate()).commit();
-
-    }
     public void openDatePicker(View view) {
         DialogFragment newFragment = new SelectDateFragment();
         TextView textView = (TextView)view.findViewById(R.id.textView);
@@ -89,5 +87,12 @@ public class Main2Activity extends AppCompatActivity {
         selectedContact.setPhoneNumber(et.getText().toString());
         selectedContact.setBirthDate(dobDate);
         selectedContact.setDateAdded(docDate);
+    }
+
+    public void afterFragmentComplete(){
+        dobDate = selectedContact.getBirthDate();
+        docDate = selectedContact.getDateAdded();
+        this.setTextDOB(selectedContact.getBirthDate(), "DOB");
+        this.setTextDOB(selectedContact.getDateAdded(), "DOC");
     }
 }

@@ -35,4 +35,10 @@ public class clickDate extends Fragment {
 
     public void openDatePicker(View view) {
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((Main2Activity) getActivity()).afterFragmentComplete();
+    }
 }
