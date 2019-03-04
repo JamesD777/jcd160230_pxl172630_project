@@ -41,6 +41,10 @@ public class MainActivity extends AppCompatActivity {
     private File dir;
     PrintWriter pw = null;
 
+    /****************************************************************************
+     * Creates the toolbar and initializes the contacts list
+     * Author: Perry Lee
+     * ****************************************************************************/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +59,10 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<Contact> test = readContactsFile(1);
     }
 
-    // Function to read in the file and populate the ListView using custom adapter
+    /****************************************************************************
+     * Function to read in the file and populate the ListView using custom adapter
+     * Author: Perry Lee
+     * ****************************************************************************/
     private ArrayList<Contact> populateList(ArrayList<Contact> contactsAL) {
 
         // Create ListView and set to cList
@@ -91,7 +98,10 @@ public class MainActivity extends AppCompatActivity {
         return contactsAL;
     }
 
-    // Read contacts from file and set to ArrayList
+    /****************************************************************************
+     * Read contacts from file and set to ArrayList
+     * Author: Perry Lee
+     * ****************************************************************************/
     private ArrayList readContactsFile(int whichData) {
         ArrayList<Contact> contactsArray = new ArrayList<>();
 
@@ -121,10 +131,14 @@ public class MainActivity extends AppCompatActivity {
         }
         return contactsArray;
     }
-    // Write newly constructed contacts ArrayList and write to file.
+
+    /****************************************************************************
+     * Write newly constructed contacts ArrayList and write to file.
+     * Author: James Dunlap, Perry Lee
+     * ****************************************************************************/
     public void writeContactsFile(Context context, ArrayList<Contact> contactsArrayList) {
         File findFile = new File(context.getFilesDir(), contactsFile);
-
+        //open files
         try {
             dir = new File(context.getFilesDir(), contactsFile);
             pw = new PrintWriter(dir);
@@ -133,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
             InputStreamReader inputReader = new InputStreamReader(file);
             BufferedReader reader = new BufferedReader(inputReader);
             FileOutputStream fileOutput = openFileOutput(contactsFile, Context.MODE_PRIVATE);
+            //loop through the data, printing it
             for(Contact c: contactsArrayList) {
                 String row = c.getFirstName() + "\t" + c.getLastName() + "\t" + c.getPhoneNumber() + "\t" + c.getBirthDate() + "\t" + c.getDateAdded();
                 System.out.println("Write: " + row);
@@ -146,7 +161,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Create new contact
+    /****************************************************************************
+     * Create a new contact button
+     * Author: Perry Lee
+     * ****************************************************************************/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -154,7 +172,10 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    // Create "New Contact"
+    /****************************************************************************
+     * When new contact button is clicked, open up second activity with blank info
+     * Author: Perry Lee
+     * ****************************************************************************/
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -172,16 +193,20 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    // Receive data from Main2Activity and construct new contacts ArrayList
+    /****************************************************************************
+     * Receive data from Main2Activity and construct new contacts ArrayList
+     * Author: Perry Lee
+     * ****************************************************************************/
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         contactsArrayList = readContactsFile(1);
-
+        //check the returned result code
         if(resultCode == RESULT_OK) {
             Contact saveContact;
+            //get the modified contact
             saveContact = data.getExtras().getParcelable("saveContact");
-
+            //add modified contact back into the arraylist
             if(saveContact.getFirstName().equals("")) {
                 contactsArrayList.remove(editedPosition);
             }
@@ -192,11 +217,16 @@ public class MainActivity extends AppCompatActivity {
                 contactsArrayList.set(editedPosition, saveContact);
             }
         }
+        //repopulate the screen with the modified data
         populateList(contactsArrayList);
+        //write it back to the file
         writeContactsFile(this, contactsArrayList);
     }
 
-    // Fill file with dummy data from assets to work with
+    /****************************************************************************
+     * Fill file with dummy data from assets to work with
+     * Author: Perry Lee
+     * ****************************************************************************/
     public ArrayList<Contact> createDummyData() {
         ArrayList<Contact> dummyContacts;
         dummyContacts = readContactsFile(0);

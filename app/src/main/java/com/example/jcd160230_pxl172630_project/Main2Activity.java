@@ -122,7 +122,7 @@ public class Main2Activity extends AppCompatActivity {
     }
     /****************************************************************************
      * When the save button is clicked, save the edited data and return
-     * Author: James Dunlap
+     * Author: James Dunlap, Perry Lee
      * ****************************************************************************/
     public void onSave(View view) {
         //update the selected contact
