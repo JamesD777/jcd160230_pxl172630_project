@@ -24,14 +24,17 @@ import android.widget.ListView;
 import android.support.v7.widget.Toolbar;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity {
     String contactsFile = "contacts.txt";
@@ -40,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
     ContactAdapter contactAdapter;
     int editedPosition;
     private static final int REQUEST_CODE = 1;
+    private File dir;
+    PrintWriter pw = null;
+    String strFilename = "contacts.txt";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
     private void populateList() {
         // Load file by calling contactsFile()
         contactsArrayList = readContactsFile(contactsFile);
-        System.out.println("ArrayList: " + contactsArrayList);
+        System.out.println("ArrayList: " + contactsArrayList.toString());
 
         // Create ListView and set to cList
         contactListView = (ListView)findViewById(R.id.cList);
@@ -102,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("Populate List");
     }
 
-    // Read contacs from file and set to ArrayList
+    // Read contacts from file and set to ArrayList
     private ArrayList readContactsFile(String contactsFile) {
         ArrayList<Contact> contactsArray = new ArrayList<>();
         BufferedReader reader = null;
@@ -137,15 +143,26 @@ public class MainActivity extends AppCompatActivity {
     // Write newly constructed contacts Array:ist and write to file.
     public void writeContactsFile(ArrayList<Contact> contactsArrayList) {
         try {
-            FileOutputStream fileOutputStream = openFileOutput(contactsFile, Context.MODE_PRIVATE);
-            ObjectOutputStream out = new ObjectOutputStream(fileOutputStream);
-            out.writeObject(contactsArrayList);
-            out.close();
-            fileOutputStream.close();
+            //FileOutputStream fileOutputStream = openFileOutput(contactsFile, Context.MODE_PRIVATE);
+            dir = new File(this.getFilesDir(), strFilename);
+            pw = new PrintWriter(dir);
+
+            for (Contact c: contactsArrayList) {
+                System.out.println(c.getFirstName() + " " + c.getLastName() + "\t" + c.getPhoneNumber() + "\t" + c.getBirthDate() + "\t" + c.getDateAdded());
+                pw.println(c.getFirstName() + " " + c.getLastName() + "\t" + c.getPhoneNumber() + "\t" + c.getBirthDate() + "\t" + c.getDateAdded());
+            }
+
+            pw.close();
+
+            //ObjectOutputStream out = new ObjectOutputStream(fileOutputStream);
+            //out.writeObject(contactsArrayList);
+            //out.close();
+            //fileOutputStream.close();
         }
         catch (IOException e) {
             e.printStackTrace();
         }
+        //populateList();
     }
 
     // Create new contact
