@@ -42,14 +42,9 @@ public class Main2Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-
         //get the contact's info
         if(getIntent().getExtras() != null) {
             selectedContact = this.getIntent().getExtras().getParcelable("sendContact");
-            //set up date fragments
-            //getSupportFragmentManager().beginTransaction().add(R.id.frameLayout, new clickDate(), "DOB").commit();
-            //getSupportFragmentManager().beginTransaction().add(R.id.frameLayout2, new clickDate(), "DOC").commit();
-
             //populate the contact's info into the view
             edit = (TextInputEditText) findViewById(R.id.textInputEdit);
             edit.setText(selectedContact.getFirstName());
@@ -62,10 +57,6 @@ public class Main2Activity extends AppCompatActivity {
             selectedContact = new Contact();
             Button disable = (Button)findViewById(R.id.DeleteBtn);
             disable.setEnabled(false);
-
-            //set up date fragments
-            //getSupportFragmentManager().beginTransaction().add(R.id.frameLayout, new clickDate(), "DOB").commit();
-            //getSupportFragmentManager().beginTransaction().add(R.id.frameLayout2, new clickDate(), "DOC").commit();
         }
         getSupportFragmentManager().beginTransaction().add(R.id.frameLayout, new clickDate(), "DOB").commit();
         getSupportFragmentManager().beginTransaction().add(R.id.frameLayout2, new clickDate(), "DOC").commit();

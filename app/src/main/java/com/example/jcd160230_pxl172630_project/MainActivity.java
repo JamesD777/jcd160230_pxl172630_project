@@ -32,14 +32,11 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class MainActivity extends AppCompatActivity {
-    String contactsFile = "contacts.txt";
     ArrayList<Contact> contactsArrayList = new ArrayList<Contact>();
     ListView contactListView;
     ContactAdapter contactAdapter;
     int editedPosition;
     private static final int REQUEST_CODE = 1;
-    private File dir;
-    PrintWriter pw = null;
 
     /****************************************************************************
      * Creates the toolbar and initializes the contacts list
@@ -56,11 +53,11 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize the global ArrayList and add data to it
         contactsArrayList = createDummyData();
-        ArrayList<Contact> test = readContactsFile(1);
+        ArrayList<Contact> test = File_IO.readContactsFile(this, 1);
     }
 
     /****************************************************************************
-     * Function to read in the file and populate the ListView using custom adapter
+     * Populate the ListView using custom adapter
      * Author: Perry Lee
      * ****************************************************************************/
     private ArrayList<Contact> populateList(ArrayList<Contact> contactsAL) {
@@ -97,70 +94,6 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("Populate List");
         return contactsAL;
     }
-
-    /****************************************************************************
-     * Read contacts from file and set to ArrayList
-     * Author: Perry Lee
-     * ****************************************************************************/
-    private ArrayList readContactsFile(int whichData) {
-        ArrayList<Contact> contactsArray = new ArrayList<>();
-
-        try {
-            FileInputStream file = openFileInput(contactsFile);
-            InputStreamReader inputReader;
-            if(whichData == 0) {
-                inputReader = new InputStreamReader((getAssets().open("contacts.txt")));
-            }
-            else {
-                inputReader = new InputStreamReader(file);
-            }
-            BufferedReader reader = new BufferedReader(inputReader);
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] row = line.split("\\t");
-                contactsArray.add(new Contact(row[0], row[1], row[2], row[3], row[4]));
-                System.out.println(row[0]);
-            }
-            //reader.close();
-            inputReader.close();
-            file.close();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        return contactsArray;
-    }
-
-    /****************************************************************************
-     * Write newly constructed contacts ArrayList and write to file.
-     * Author: James Dunlap, Perry Lee
-     * ****************************************************************************/
-    public void writeContactsFile(Context context, ArrayList<Contact> contactsArrayList) {
-        File findFile = new File(context.getFilesDir(), contactsFile);
-        //open files
-        try {
-            dir = new File(context.getFilesDir(), contactsFile);
-            pw = new PrintWriter(dir);
-
-            FileInputStream file = openFileInput(contactsFile);
-            InputStreamReader inputReader = new InputStreamReader(file);
-            BufferedReader reader = new BufferedReader(inputReader);
-            FileOutputStream fileOutput = openFileOutput(contactsFile, Context.MODE_PRIVATE);
-            //loop through the data, printing it
-            for(Contact c: contactsArrayList) {
-                String row = c.getFirstName() + "\t" + c.getLastName() + "\t" + c.getPhoneNumber() + "\t" + c.getBirthDate() + "\t" + c.getDateAdded();
-                System.out.println("Write: " + row);
-                pw.println(row);
-            }
-            pw.close();
-            fileOutput.close();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     /****************************************************************************
      * Create a new contact button
      * Author: Perry Lee
@@ -200,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        contactsArrayList = readContactsFile(1);
+        contactsArrayList = File_IO.readContactsFile(this, 1);
         //check the returned result code
         if(resultCode == RESULT_OK) {
             Contact saveContact;
@@ -220,18 +153,18 @@ public class MainActivity extends AppCompatActivity {
         //repopulate the screen with the modified data
         populateList(contactsArrayList);
         //write it back to the file
-        writeContactsFile(this, contactsArrayList);
+        File_IO.writeContactsFile(this, contactsArrayList);
     }
 
     /****************************************************************************
-     * Fill file with dummy data from assets to work with
+     * Fill file with dummy data from assets to work with, using File_IO class
      * Author: Perry Lee
      * ****************************************************************************/
     public ArrayList<Contact> createDummyData() {
         ArrayList<Contact> dummyContacts;
-        dummyContacts = readContactsFile(0);
+        dummyContacts = File_IO.readContactsFile(this,0);
         dummyContacts = populateList(dummyContacts);
-        writeContactsFile(this, dummyContacts);
+        File_IO.writeContactsFile(this, dummyContacts);
         return dummyContacts;
     }
 }
