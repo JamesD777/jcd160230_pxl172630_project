@@ -21,7 +21,6 @@ public class Contact implements Parcelable {
     private String phoneNumber;
     private String birthDate;
     private String dateAdded;
-    private boolean deleteFlag;
 
     public Contact() {
         // Empty constructor

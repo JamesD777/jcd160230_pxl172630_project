@@ -12,6 +12,8 @@ package com.example.jcd160230_pxl172630_project;
 
 import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -20,23 +22,23 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.support.v7.widget.Toolbar;
+import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
 public class MainActivity extends AppCompatActivity {
-    ArrayList<Contact> contactsArrayList = new ArrayList<Contact>();
-    ListView contactListView;
-    ContactAdapter contactAdapter;
-    int editedPosition;
+    private ArrayList<Contact> contactsArrayList = new ArrayList<Contact>();
+    private ListView contactListView;
+    private ContactAdapter contactAdapter;
+    private int editedPosition;
     private static final int REQUEST_CODE = 1;
+
+    private SensorManager sensorManager;
+    private Sensor accelerometer;
+    private SensorHandler sensorHandler;
+    private int currentSort = 0; // 0 for ascending, 1 for descending
 
     /****************************************************************************
      * Creates the toolbar and initializes the contacts list
@@ -54,6 +56,40 @@ public class MainActivity extends AppCompatActivity {
         // Initialize the global ArrayList and add data to it
         contactsArrayList = createDummyData();
         ArrayList<Contact> test = File_IO.readContactsFile(this, 1);
+
+        // Handle shaking of device
+        sensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensorHandler = new SensorHandler();
+        sensorHandler.setOnShakeListener(new SensorHandler.OnShakeListener() {
+            @Override
+            public void onShake(int count) {
+                Toast toast = Toast.makeText(getApplicationContext(), "I'm shook", Toast.LENGTH_SHORT);
+                toast.show();
+
+                //sortContacts(contactsArrayList);
+                if(currentSort == 0) {
+                    currentSort = 1;
+                }
+                else if(currentSort == 1) {
+                    currentSort = 0;
+                }
+                populateList(contactsArrayList);
+                System.out.println("Current Sort: " + currentSort);
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        sensorManager.registerListener(sensorHandler, accelerometer, SensorManager.SENSOR_DELAY_UI);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        sensorManager.unregisterListener(sensorHandler);
     }
 
     /****************************************************************************
@@ -66,11 +102,7 @@ public class MainActivity extends AppCompatActivity {
         contactListView = (ListView)findViewById(R.id.cList);
 
         // Sort the ListView
-        Collections.sort(contactsAL, new Comparator<Contact>() {
-            public int compare(Contact lhs, Contact rhs) {
-                return lhs.getLastName().compareTo(rhs.getLastName());
-            }
-        });
+        sortContacts(contactsAL);
 
         // Create ContactAdapter
         contactAdapter = new ContactAdapter(MainActivity.this, contactsAL);
@@ -166,5 +198,22 @@ public class MainActivity extends AppCompatActivity {
         dummyContacts = populateList(dummyContacts);
         File_IO.writeContactsFile(this, dummyContacts);
         return dummyContacts;
+    }
+
+    public void sortContacts(ArrayList<Contact> contactsAL) {
+        if(currentSort == 0) {
+            Collections.sort(contactsAL, new Comparator<Contact>() {
+                public int compare(Contact lhs, Contact rhs) {
+                    return lhs.getLastName().compareTo(rhs.getLastName());
+                }
+            });
+        }
+        else if(currentSort == 1) {
+            Collections.sort(contactsAL, new Comparator<Contact>() {
+                public int compare(Contact lhs, Contact rhs) {
+                    return rhs.getLastName().compareTo(lhs.getLastName());
+                }
+            });
+        }
     }
 }
