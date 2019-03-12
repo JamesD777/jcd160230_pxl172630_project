@@ -14,7 +14,10 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.io.Serializable;
-
+/****************************************************************************
+ * Sets up the contact parcelable for contacts, no more comments needed
+ * Author: Perry Lee
+ * ****************************************************************************/
 public class Contact implements Parcelable {
     private String firstName;
     private String lastName;

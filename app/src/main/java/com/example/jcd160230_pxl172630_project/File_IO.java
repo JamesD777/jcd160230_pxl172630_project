@@ -30,7 +30,7 @@ public class File_IO {
      * ****************************************************************************/
     public static ArrayList readContactsFile(Context context, int whichData) {
         ArrayList<Contact> contactsArray = new ArrayList<>();
-
+        //get file contents
         try {
             FileInputStream file = context.openFileInput(contactsFile);
             InputStreamReader inputReader;
@@ -41,7 +41,7 @@ public class File_IO {
                 inputReader = new InputStreamReader(file);
             }
             BufferedReader reader = new BufferedReader(inputReader);
-
+            //split into contact objects
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] row = line.split("\\t");
