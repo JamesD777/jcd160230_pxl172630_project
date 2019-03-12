@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         sensorHandler.setOnShakeListener(new SensorHandler.OnShakeListener() {
             @Override
             public void onShake(int count) {
-                Toast toast = Toast.makeText(getApplicationContext(), "I'm shook", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(getApplicationContext(), "List Reversed", Toast.LENGTH_SHORT);
                 toast.show();
 
                 //sortContacts(contactsArrayList);
