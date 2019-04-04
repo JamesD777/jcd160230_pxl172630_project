@@ -41,9 +41,9 @@ public class MainActivity extends AppCompatActivity {
     private SensorHandler sensorHandler;
     private int currentSort = 0; // 0 for ascending, 1 for descending
 
-    private static final String dbName = "ContactsDatabase";
-    private static final int dbVersion = 1;
-    DBHandler database = new DBHandler(this, dbName, dbVersion);
+    private static final String DB_NAME = "ContactsDatabase";
+    private static final int DB_VERSION = 1;
+    DBHandler database;
 
     /****************************************************************************
      * Creates the toolbar and initializes the contacts list
@@ -57,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
         // Create toolbar and add "New" clickable menu button
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // Create Database
+        database = new DBHandler(this, DB_NAME, DB_VERSION);
 
         // Initialize the global ArrayList and add data to it
         contactsArrayList = createDummyData();
@@ -234,5 +237,12 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    public void dropDatabase(View view) {
+        ArrayList<Contact> clearedList = new ArrayList<Contact>();
+        this.deleteDatabase(DB_NAME);
+        database = new DBHandler(this, DB_NAME, DB_VERSION);
+        populateList(clearedList);
     }
 }
