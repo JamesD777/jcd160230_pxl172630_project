@@ -20,7 +20,10 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/****************************************************************************
+ * Sets up the contact adapter for a contact object
+ * Author: Perry Lee
+ * ****************************************************************************/
 public class ContactAdapter extends BaseAdapter {
     private List<Contact> contactList;
     private LayoutInflater inflater;

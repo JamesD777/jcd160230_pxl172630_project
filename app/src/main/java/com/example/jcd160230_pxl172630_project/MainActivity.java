@@ -43,7 +43,8 @@ public class MainActivity extends AppCompatActivity {
     DBHandler database;
 
     /****************************************************************************
-     * Creates the toolbar and initializes the contacts list
+     * Creates the toolbar, handles shaking for list reversal, and initializes
+     * the contacts list
      * Author: Perry Lee
      * ****************************************************************************/
     @Override
@@ -83,13 +84,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
+    /****************************************************************************
+     * Register the listener when the main activity is resumed
+     * Author: Perry Lee
+     * ****************************************************************************/
     @Override
     protected void onResume() {
         super.onResume();
         sensorManager.registerListener(sensorHandler, accelerometer, SensorManager.SENSOR_DELAY_UI);
     }
-
+    /****************************************************************************
+     * Unregister when the screen is paused to try and slow battery useage
+     * Author: James Dunlap
+     * ****************************************************************************/
     @Override
     protected void onPause() {
         super.onPause();
