@@ -2,7 +2,8 @@
  * This is an application written for 4301.002, to display a contact list in an
  * android app that is modifiable by the user. It has a list that opens up a
  * specific contact's info when you click their name. This contact information
- * can be modified by the user and is saved when the save button is clicked.
+ * can be modified by the user and is saved to a sqlite database when the save
+ * button is clicked.
  *
  * Written by James Dunlap(jcd160230) and Perry Lee (pxl172630) at The University
  * of Texas at Dallas starting March 4, 2019, for an Android development course.
@@ -29,8 +30,6 @@ import java.util.Comparator;
 
 public class MainActivity extends AppCompatActivity {
     private ArrayList<Contact> contactsArrayList = new ArrayList<Contact>();
-    private ListView contactListView;
-    private ContactAdapter contactAdapter;
     private int editedPosition;
     private static final int REQUEST_CODE = 1;
 
@@ -104,13 +103,13 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Contact> populateList(ArrayList<Contact> contactsAL) {
 
         // Create ListView and set to cList
-        contactListView = (ListView)findViewById(R.id.cList);
+        ListView contactListView = (ListView) findViewById(R.id.cList);
 
         // Sort the ListView
         sortContacts(contactsAL);
 
         // Create ContactAdapter
-        contactAdapter = new ContactAdapter(MainActivity.this, contactsAL);
+        ContactAdapter contactAdapter = new ContactAdapter(MainActivity.this, contactsAL);
 
         // Set adapter to ContactAdapter
         contactListView.setAdapter(contactAdapter);
