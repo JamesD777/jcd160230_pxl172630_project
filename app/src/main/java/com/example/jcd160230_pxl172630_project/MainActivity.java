@@ -10,9 +10,7 @@
 
 package com.example.jcd160230_pxl172630_project;
 
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
@@ -244,5 +242,9 @@ public class MainActivity extends AppCompatActivity {
         this.deleteDatabase(DB_NAME);
         database = new DBHandler(this, DB_NAME, DB_VERSION);
         populateList(clearedList);
+    }
+
+    public void importData(View view) {
+        populateList(createDummyData());
     }
 }

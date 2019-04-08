@@ -46,8 +46,9 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(PHONE_NUMBER, contact.getPhoneNumber());
         values.put(BIRTH_DATE, contact.getBirthDate());
         values.put(DATE_ADDED, contact.getDateAdded());
-
-        database.insert(CONTACTS_TABLE, null, values);
+        Cursor cursor = database.rawQuery("SELECT * FROM " + CONTACTS_TABLE + " WHERE " + PHONE_NUMBER + "= '" + contact.getPhoneNumber() + "'", null);
+        if(!cursor.moveToFirst())
+            database.insert(CONTACTS_TABLE, null, values);
         database.close();
     }
     Contact getContact(int id) {
