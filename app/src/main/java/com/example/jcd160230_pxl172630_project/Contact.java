@@ -2,7 +2,8 @@
  * This is an application written for 4301.002, to display a contact list in an
  * android app that is modifiable by the user. It has a list that opens up a
  * specific contact's info when you click their name. This contact information
- * can be modified by the user and is saved when the save button is clicked.
+ * can be modified by the user and is saved to a sqlite database when the save
+ * button is clicked.
  *
  * Written by James Dunlap(jcd160230) and Perry Lee (pxl172630) at The University
  * of Texas at Dallas starting March 4, 2019, for an Android development course.
@@ -19,6 +20,7 @@ import java.io.Serializable;
  * Author: Perry Lee
  * ****************************************************************************/
 public class Contact implements Parcelable {
+    private int keyID;
     private String firstName;
     private String lastName;
     private String phoneNumber;
@@ -36,8 +38,23 @@ public class Contact implements Parcelable {
         this.birthDate = bDate;
         this.dateAdded = aDate;
     }
+    // Database helper
+    public Contact(int id, String fName, String lName, String phone, String bDate, String aDate) {
+        this.keyID = id;
+        this.firstName = fName;
+        this.lastName = lName;
+        this.phoneNumber = phone;
+        this.birthDate = bDate;
+        this.dateAdded = aDate;
+    }
 
     // Getters and setters
+    public void setID(int id) {
+        this.keyID = id;
+    }
+    public int getID() {
+        return keyID;
+    }
     public void setFirstName(String fName) {
         this.firstName = fName;
     }
@@ -71,6 +88,7 @@ public class Contact implements Parcelable {
 
     // Parcelable implementation
     public Contact(Parcel parcel) {
+        this.keyID = parcel.readInt();
         this.firstName = parcel.readString();
         this.lastName = parcel.readString();
         this.phoneNumber = parcel.readString();
@@ -81,6 +99,7 @@ public class Contact implements Parcelable {
         return 0;
     }
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(keyID);
         dest.writeString(firstName);
         dest.writeString(lastName);
         dest.writeString(phoneNumber);
@@ -88,6 +107,7 @@ public class Contact implements Parcelable {
         dest.writeString(dateAdded);
     }
     public void readFromParcel(Parcel in) {
+        keyID = in.readInt();
         firstName = in.readString();
         lastName = in.readString();
         phoneNumber = in.readString();

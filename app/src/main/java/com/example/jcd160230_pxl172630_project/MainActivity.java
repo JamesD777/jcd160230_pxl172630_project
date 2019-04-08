@@ -2,7 +2,8 @@
  * This is an application written for 4301.002, to display a contact list in an
  * android app that is modifiable by the user. It has a list that opens up a
  * specific contact's info when you click their name. This contact information
- * can be modified by the user and is saved when the save button is clicked.
+ * can be modified by the user and is saved to a sqlite database when the save
+ * button is clicked.
  *
  * Written by James Dunlap(jcd160230) and Perry Lee (pxl172630) at The University
  * of Texas at Dallas starting March 4, 2019, for an Android development course.
@@ -10,7 +11,6 @@
 
 package com.example.jcd160230_pxl172630_project;
 
-import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
@@ -30,8 +30,6 @@ import java.util.Comparator;
 
 public class MainActivity extends AppCompatActivity {
     private ArrayList<Contact> contactsArrayList = new ArrayList<Contact>();
-    private ListView contactListView;
-    private ContactAdapter contactAdapter;
     private int editedPosition;
     private static final int REQUEST_CODE = 1;
 
@@ -39,6 +37,10 @@ public class MainActivity extends AppCompatActivity {
     private Sensor accelerometer;
     private SensorHandler sensorHandler;
     private int currentSort = 0; // 0 for ascending, 1 for descending
+
+    private static final String DB_NAME = "ContactsDatabase";
+    private static final int DB_VERSION = 1;
+    DBHandler database;
 
     /****************************************************************************
      * Creates the toolbar, handles shaking for list reversal, and initializes
@@ -54,9 +56,12 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // Create Database
+        database = new DBHandler(this, DB_NAME, DB_VERSION);
+
         // Initialize the global ArrayList and add data to it
         contactsArrayList = createDummyData();
-        ArrayList<Contact> test = File_IO.readContactsFile(this, 1);
+        populateList(contactsArrayList);
 
         // Handle shaking of device
         sensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
@@ -68,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
                 Toast toast = Toast.makeText(getApplicationContext(), "List Reversed", Toast.LENGTH_SHORT);
                 toast.show();
 
-                //sortContacts(contactsArrayList);
                 if(currentSort == 0) {
                     currentSort = 1;
                 }
@@ -106,13 +110,13 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Contact> populateList(ArrayList<Contact> contactsAL) {
 
         // Create ListView and set to cList
-        contactListView = (ListView)findViewById(R.id.cList);
+        ListView contactListView = (ListView) findViewById(R.id.cList);
 
         // Sort the ListView
         sortContacts(contactsAL);
 
         // Create ContactAdapter
-        contactAdapter = new ContactAdapter(MainActivity.this, contactsAL);
+        ContactAdapter contactAdapter = new ContactAdapter(MainActivity.this, contactsAL);
 
         // Set adapter to ContactAdapter
         contactListView.setAdapter(contactAdapter);
@@ -121,16 +125,19 @@ public class MainActivity extends AppCompatActivity {
         contactListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Contact contact = (Contact)parent.getItemAtPosition(position);
-                editedPosition = position;
-                System.out.println(contact.getFirstName());
 
+                // Retrieve the object at the position that is clicked
+                Contact contact = (Contact)parent.getAdapter().getItem(position);
+
+                // Store position, for checking list size later
+                editedPosition = position;
+
+                // Send object as intent to MainActivity2
                 Intent intent = new Intent(MainActivity.this, Main2Activity.class);
                 intent.putExtra("sendContact", contact);
                 MainActivity.this.startActivityForResult(intent, REQUEST_CODE);
             }
         });
-        System.out.println("Populate List");
         return contactsAL;
     }
     /****************************************************************************
@@ -172,27 +179,32 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        contactsArrayList = File_IO.readContactsFile(this, 1);
-        //check the returned result code
+
+        // Check the returned result code
         if(resultCode == RESULT_OK) {
             Contact saveContact;
-            //get the modified contact
+
+            // Get the modified contact
             saveContact = data.getExtras().getParcelable("saveContact");
-            //add modified contact back into the arraylist
+
+            // Depending on how the contact was changed, do delete, add, or update
             if(saveContact.getFirstName().equals("")) {
-                contactsArrayList.remove(editedPosition);
+                // Delete contact
+                database.deleteContact(saveContact);
             }
             else if (editedPosition > contactsArrayList.size()) {
-                contactsArrayList.add(saveContact);
+                // Add new contact
+                database.addContact(saveContact);
+
             }
             else {
-                contactsArrayList.set(editedPosition, saveContact);
+                // Edit existing contact
+                database.updateContact(saveContact);
             }
         }
-        //repopulate the screen with the modified data
-        populateList(contactsArrayList);
-        //write it back to the file
-        File_IO.writeContactsFile(this, contactsArrayList);
+
+        // Populate ContactAdapter with data from the database
+        populateList(database.getAllContacts());
     }
 
     /****************************************************************************
@@ -201,10 +213,17 @@ public class MainActivity extends AppCompatActivity {
      * ****************************************************************************/
     public ArrayList<Contact> createDummyData() {
         ArrayList<Contact> dummyContacts;
+
+        // Read data from seed file
         dummyContacts = File_IO.readContactsFile(this,0);
-        dummyContacts = populateList(dummyContacts);
-        File_IO.writeContactsFile(this, dummyContacts);
-        return dummyContacts;
+
+        // Load data into the database
+        dummyContacts.forEach((n) -> database.addContact(n));
+
+        // Now that the data is loaded into the database, grab data from the database
+        // in order to get ID's
+        ArrayList<Contact> arrayListFromDatabase = database.getAllContacts();
+        return arrayListFromDatabase;
     }
 
     public void sortContacts(ArrayList<Contact> contactsAL) {
@@ -222,5 +241,16 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    public void dropDatabase(View view) {
+        ArrayList<Contact> clearedList = new ArrayList<Contact>();
+        this.deleteDatabase(DB_NAME);
+        database = new DBHandler(this, DB_NAME, DB_VERSION);
+        populateList(clearedList);
+    }
+
+    public void importData(View view) {
+        populateList(createDummyData());
     }
 }
