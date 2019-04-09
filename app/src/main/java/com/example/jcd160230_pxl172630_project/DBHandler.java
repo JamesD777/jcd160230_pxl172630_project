@@ -86,7 +86,7 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     /****************************************************************************
-     * Get the contact of a specfic person from the database using their ID. Called
+     * Get the contact of a specific person from the database using their ID. Called
      * when you want to modify their data
      * Author: Perry Lee
      * ****************************************************************************/
