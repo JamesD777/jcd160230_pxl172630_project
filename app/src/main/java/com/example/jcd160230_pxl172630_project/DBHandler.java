@@ -18,10 +18,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
-
+/****************************************************************************
+ * Handler class for the database to make working with it easy
+ * Author: Perry Lee, James Dunlap
+ * ****************************************************************************/
 public class DBHandler extends SQLiteOpenHelper {
-    //private static final int DB_VERSION = 14; //13
-    //private static final String DB_NAME = "ContactsDatabase";
+
     private static final String CONTACTS_TABLE = "contacts";
     private static final String KEY_ID = "id";
     private static final String FIRST_NAME = "firstName";
@@ -30,9 +32,18 @@ public class DBHandler extends SQLiteOpenHelper {
     private static final String BIRTH_DATE = "birthDate";
     private static final String DATE_ADDED = "dateAdded";
 
+    /****************************************************************************
+     * Constructor which sets up the handler
+     * Author: Perry Lee
+     * ****************************************************************************/
     public DBHandler(Context context, String databaseName, int databaseVersion) {
         super(context, databaseName, null, databaseVersion);
     }
+
+    /****************************************************************************
+     * Oncreate function for the dbhandler, sets up the contacts table
+     * Author: Perry Lee
+     * ****************************************************************************/
     public void onCreate(SQLiteDatabase database) {
         String CREATE_CONTACTS_TABLE = "CREATE TABLE " + CONTACTS_TABLE + " ("
                 + KEY_ID + " INTEGER PRIMARY KEY, "
@@ -43,11 +54,21 @@ public class DBHandler extends SQLiteOpenHelper {
                 + DATE_ADDED + " TEXT);";
         database.execSQL(CREATE_CONTACTS_TABLE);
     }
+
+    /****************************************************************************
+     * Upgrades the database with a new one and recreates the contacts table
+     * Author: Perry Lee
+     * ****************************************************************************/
     public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
         database.execSQL("DROP TABLE IF EXISTS " + CONTACTS_TABLE);
 
         onCreate(database);
     }
+
+    /******************************************************************************
+     * Add a new contact to the database with the info given by the user
+     * Author: Perry Lee, James Dunlap
+     * ****************************************************************************/
     void addContact(Contact contact) {
         SQLiteDatabase database = getWritableDatabase();
 
@@ -57,11 +78,18 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(PHONE_NUMBER, contact.getPhoneNumber());
         values.put(BIRTH_DATE, contact.getBirthDate());
         values.put(DATE_ADDED, contact.getDateAdded());
+        //check if the contact already exists, stops the db from having copies of the same person
         Cursor cursor = database.rawQuery("SELECT * FROM " + CONTACTS_TABLE + " WHERE " + PHONE_NUMBER + "= '" + contact.getPhoneNumber() + "'", null);
-        if(!cursor.moveToFirst())
+        if(!cursor.moveToFirst()) //if the query is null, this contact is new and can be added, if copy, dont add
             database.insert(CONTACTS_TABLE, null, values);
         database.close();
     }
+
+    /****************************************************************************
+     * Get the contact of a specfic person from the database using their ID. Called
+     * when you want to modify their data
+     * Author: Perry Lee
+     * ****************************************************************************/
     Contact getContact(int id) {
         SQLiteDatabase database = this.getReadableDatabase();
 
@@ -77,6 +105,10 @@ public class DBHandler extends SQLiteOpenHelper {
 
         return contact;
     }
+    /****************************************************************************
+     * Get all of the contacts from the database, called when populating list initially
+     * Author: Perry Lee
+     * ****************************************************************************/
     public ArrayList<Contact> getAllContacts() {
         ArrayList<Contact> contactList = new ArrayList<Contact>();
         String selectQuery = "SELECT * FROM " + CONTACTS_TABLE;
@@ -84,7 +116,7 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase database = this.getWritableDatabase();
         Cursor cursor = database.rawQuery(selectQuery, null);
 
-        if(cursor.moveToFirst()) {
+        if(cursor.moveToFirst()) { //if not null return from the query
             do {
                 Contact contact = new Contact();
                 contact.setID(Integer.parseInt(cursor.getString(0)));
@@ -99,6 +131,11 @@ public class DBHandler extends SQLiteOpenHelper {
         }
         return contactList;
     }
+
+    /****************************************************************************
+     * Update a contact in the database with new data
+     * Author: Perry Lee
+     * ****************************************************************************/
     public int updateContact(Contact contact) {
         SQLiteDatabase database = getWritableDatabase();
 
@@ -111,6 +148,11 @@ public class DBHandler extends SQLiteOpenHelper {
 
         return database.update(CONTACTS_TABLE, values, KEY_ID + " = ?", new String[] {String.valueOf(contact.getID())});
     }
+
+    /****************************************************************************
+     * Delete a contact from the database when the delete button is clicked
+     * Author: Perry Lee
+     * ****************************************************************************/
     public void deleteContact(Contact contact) {
         SQLiteDatabase database = getWritableDatabase();
         database.delete(CONTACTS_TABLE, KEY_ID + " = ?", new String[]{String.valueOf(contact.getID())});

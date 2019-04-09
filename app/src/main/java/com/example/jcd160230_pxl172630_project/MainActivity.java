@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
 
     /****************************************************************************
      * Receive data from Main2Activity and construct new contacts ArrayList
-     * Author: Perry Lee
+     * Author: Perry Lee, James Dunlap
      * ****************************************************************************/
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -225,31 +225,32 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<Contact> arrayListFromDatabase = database.getAllContacts();
         return arrayListFromDatabase;
     }
-
+    /****************************************************************************
+     * Based on if it needs to be in normal or reverse order, sort the contacts array list
+     * Author: Perry Lee
+     * ****************************************************************************/
     public void sortContacts(ArrayList<Contact> contactsAL) {
-        if(currentSort == 0) {
-            Collections.sort(contactsAL, new Comparator<Contact>() {
-                public int compare(Contact lhs, Contact rhs) {
-                    return lhs.getLastName().compareTo(rhs.getLastName());
-                }
-            });
+        if(currentSort == 0) {//forward
+            Collections.sort(contactsAL, (lhs, rhs) -> lhs.getLastName().compareTo(rhs.getLastName()));
         }
-        else if(currentSort == 1) {
-            Collections.sort(contactsAL, new Comparator<Contact>() {
-                public int compare(Contact lhs, Contact rhs) {
-                    return rhs.getLastName().compareTo(lhs.getLastName());
-                }
-            });
+        else if(currentSort == 1) {//reverse
+            Collections.sort(contactsAL, (lhs, rhs) -> rhs.getLastName().compareTo(lhs.getLastName()));
         }
     }
-
+    /****************************************************************************
+     * Drop the database when the reinitialize button is clicked
+     * Author: Perry Lee
+     * ****************************************************************************/
     public void dropDatabase(View view) {
         ArrayList<Contact> clearedList = new ArrayList<Contact>();
         this.deleteDatabase(DB_NAME);
         database = new DBHandler(this, DB_NAME, DB_VERSION);
         populateList(clearedList);
     }
-
+    /****************************************************************************
+     * Import the dummy data from the contacts file when the import button is clicked
+     * Author: James Dunlap
+     * ****************************************************************************/
     public void importData(View view) {
         populateList(createDummyData());
     }

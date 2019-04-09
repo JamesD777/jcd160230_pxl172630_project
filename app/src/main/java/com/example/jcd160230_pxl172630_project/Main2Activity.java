@@ -24,6 +24,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/****************************************************************************
+ * Second activity that lets a user modify a clicked contact
+ * Author: James Dunlap
+ * ****************************************************************************/
 public class Main2Activity extends AppCompatActivity {
 
     String dobDate = "DOB";

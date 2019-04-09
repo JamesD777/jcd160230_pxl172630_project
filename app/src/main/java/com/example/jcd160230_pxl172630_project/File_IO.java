@@ -21,9 +21,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class File_IO {
-    static String contactsFile = "contacts.txt";
-    private static File dir;
-    static PrintWriter pw = null;
+    private static String contactsFile = "contacts.txt";
+    private static PrintWriter pw = null;
 
     /****************************************************************************
      * Read contacts from file and set to ArrayList
@@ -67,7 +66,7 @@ public class File_IO {
         File findFile = new File(context.getFilesDir(), contactsFile);
         //open files
         try {
-            dir = new File(context.getFilesDir(), contactsFile);
+            File dir = new File(context.getFilesDir(), contactsFile);
             pw = new PrintWriter(dir);
 
             FileInputStream file = context.openFileInput(contactsFile);

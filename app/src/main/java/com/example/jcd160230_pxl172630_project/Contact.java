@@ -14,7 +14,6 @@ package com.example.jcd160230_pxl172630_project;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.io.Serializable;
 /****************************************************************************
  * Sets up the contact parcelable for contacts, no more comments needed
  * Author: Perry Lee
