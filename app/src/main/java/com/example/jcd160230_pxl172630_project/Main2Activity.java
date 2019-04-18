@@ -74,8 +74,6 @@ public class Main2Activity extends AppCompatActivity {
         }
         getSupportFragmentManager().beginTransaction().add(R.id.frameLayout, new clickDate(), "DOB").commit();
         getSupportFragmentManager().beginTransaction().add(R.id.frameLayout2, new clickDate(), "DOC").commit();
-
-        System.out.println("MA2 Contact ID: " + selectedContact.getID());
     }
     /****************************************************************************
      * Opens the datepicker fragment, naming it based on the corresponding date field
