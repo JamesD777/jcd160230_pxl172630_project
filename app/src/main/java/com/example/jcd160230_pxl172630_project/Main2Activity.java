@@ -176,4 +176,11 @@ public class Main2Activity extends AppCompatActivity {
         }
 
     }
+
+    public void openMap(View view) {
+        //format the request for the reverse Geocoding
+        String address = selectedContact.getPostal().replaceAll("\\s","+") + "+" + selectedContact.getPostal2().replaceAll("\\s","+");
+        System.out.println(address);
+        String reverseRequest = "http://maps.googleapis.com/maps/api/geocode/json?address=" + address + ",+"+selectedContact.getCity() + ",+" + selectedContact.getState() + "&sensor=true_or_false&key=\"" + key + "\"";
+    }
 }
