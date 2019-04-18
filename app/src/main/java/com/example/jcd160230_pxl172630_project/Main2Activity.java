@@ -56,6 +56,16 @@ public class Main2Activity extends AppCompatActivity {
             edit.setText(selectedContact.getLastName());
             et = (EditText) findViewById(R.id.editText3);
             et.setText(selectedContact.getPhoneNumber());
+            et = (EditText) findViewById(R.id.postalText);
+            et.setText(selectedContact.getPostal());
+            et = (EditText) findViewById(R.id.postalText2);
+            et.setText(selectedContact.getPostal2());
+            et = (EditText) findViewById(R.id.cityText);
+            et.setText(selectedContact.getCity());
+            et = (EditText) findViewById(R.id.stateText);
+            et.setText(selectedContact.getState());
+            et = (EditText) findViewById(R.id.zipText);
+            et.setText(selectedContact.getZipCode());
         }
         else {
             selectedContact = new Contact();
