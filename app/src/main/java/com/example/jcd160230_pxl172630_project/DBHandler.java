@@ -31,6 +31,11 @@ public class DBHandler extends SQLiteOpenHelper {
     private static final String PHONE_NUMBER = "phoneNumber";
     private static final String BIRTH_DATE = "birthDate";
     private static final String DATE_ADDED = "dateAdded";
+    private static final String POSTAL_1 = "postal1";
+    private static final String POSTAL_2 = "postal2";
+    private static final String CITY = "city";
+    private static final String STATE = "state";
+    private static final String ZIPCODE = "zipCode";
 
     /****************************************************************************
      * Constructor which sets up the handler
@@ -51,7 +56,12 @@ public class DBHandler extends SQLiteOpenHelper {
                 + LAST_NAME + " TEXT, "
                 + PHONE_NUMBER + " TEXT, "
                 + BIRTH_DATE + " TEXT, "
-                + DATE_ADDED + " TEXT);";
+                + DATE_ADDED + " TEXT, "
+                + POSTAL_1 + " TEXT, "
+                + POSTAL_2 + " TEXT, "
+                + CITY + " TEXT, "
+                + STATE + " TEXT, "
+                + ZIPCODE + " TEXT);";
         database.execSQL(CREATE_CONTACTS_TABLE);
     }
 
@@ -78,6 +88,11 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(PHONE_NUMBER, contact.getPhoneNumber());
         values.put(BIRTH_DATE, contact.getBirthDate());
         values.put(DATE_ADDED, contact.getDateAdded());
+        values.put(POSTAL_1, contact.getPostal());
+        values.put(POSTAL_2, contact.getPostal2());
+        values.put(CITY, contact.getCity());
+        values.put(STATE, contact.getState());
+        values.put(ZIPCODE, contact.getZipCode());
         //check if the contact already exists, stops the db from having copies of the same person
         Cursor cursor = database.rawQuery("SELECT * FROM " + CONTACTS_TABLE + " WHERE " + PHONE_NUMBER + "= '" + contact.getPhoneNumber() + "'", null);
         if(!cursor.moveToFirst()) //if the query is null, this contact is new and can be added, if copy, dont add
@@ -102,6 +117,11 @@ public class DBHandler extends SQLiteOpenHelper {
         contact.setPhoneNumber(cursor.getString(cursor.getColumnIndex(PHONE_NUMBER)));
         contact.setBirthDate(cursor.getString(cursor.getColumnIndex(BIRTH_DATE)));
         contact.setDateAdded(cursor.getString(cursor.getColumnIndex(DATE_ADDED)));
+        contact.setPostal(cursor.getString(cursor.getColumnIndex(POSTAL_1)));
+        contact.setPostal2(cursor.getString(cursor.getColumnIndex(POSTAL_2)));
+        contact.setCity(cursor.getString(cursor.getColumnIndex(CITY)));
+        contact.setState(cursor.getString(cursor.getColumnIndex(STATE)));
+        contact.setZipCode(cursor.getString(cursor.getColumnIndex(ZIPCODE)));
 
         return contact;
     }
@@ -125,6 +145,11 @@ public class DBHandler extends SQLiteOpenHelper {
                 contact.setPhoneNumber((cursor.getString(3)));
                 contact.setBirthDate(cursor.getString(4));
                 contact.setDateAdded(cursor.getString(5));
+                contact.setPostal(cursor.getString(6));
+                contact.setPostal2(cursor.getString(7));
+                contact.setCity(cursor.getString(8));
+                contact.setState(cursor.getString(9));
+                contact.setZipCode(cursor.getString(10));
                 contactList.add(contact);
                 System.out.println(contact.getFirstName());
             } while (cursor.moveToNext());
@@ -144,7 +169,11 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(LAST_NAME, contact.getLastName());
         values.put(PHONE_NUMBER, contact.getPhoneNumber());
         values.put(BIRTH_DATE, contact.getBirthDate());
-        values.put(DATE_ADDED, contact.getDateAdded());
+        values.put(POSTAL_1, contact.getPostal2());
+        values.put(POSTAL_2, contact.getPostal());
+        values.put(CITY, contact.getCity());
+        values.put(STATE, contact.getState());
+        values.put(ZIPCODE, contact.getZipCode());
 
         return database.update(CONTACTS_TABLE, values, KEY_ID + " = ?", new String[] {String.valueOf(contact.getID())});
     }

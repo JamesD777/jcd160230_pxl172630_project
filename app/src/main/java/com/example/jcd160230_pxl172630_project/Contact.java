@@ -34,6 +34,14 @@ public class Contact implements Parcelable {
     public Contact() {
         // Empty constructor
     }
+    // FileIO
+    public Contact(String fName, String lName, String phone, String bDate, String aDate) {
+        this.firstName = fName;
+        this.lastName = lName;
+        this.phoneNumber = phone;
+        this.birthDate = bDate;
+        this.dateAdded = aDate;
+    }
     // Basic constructor
     public Contact(String fName, String lName, String phone, String bDate, String aDate, String postal, String postal2, String city, String state, String zipCode) {
         this.firstName = fName;

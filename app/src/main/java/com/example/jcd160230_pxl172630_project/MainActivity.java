@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private int currentSort = 0; // 0 for ascending, 1 for descending
 
     private static final String DB_NAME = "ContactsDatabase";
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 2;
     DBHandler database;
 
     /****************************************************************************
