@@ -118,6 +118,11 @@ public class Main2Activity extends AppCompatActivity {
         selectedContact.setPhoneNumber("");
         selectedContact.setBirthDate("");
         selectedContact.setDateAdded("");
+        selectedContact.setPostal("");
+        selectedContact.setPostal2("");
+        selectedContact.setCity("");
+        selectedContact.setState("");
+        selectedContact.setZipCode("");
 
         //send the updated info back to the main activity
         Intent intent = new Intent(Main2Activity.this, MainActivity.class);
@@ -139,11 +144,25 @@ public class Main2Activity extends AppCompatActivity {
         selectedContact.setPhoneNumber(et.getText().toString());
         selectedContact.setBirthDate(dobDate);
         selectedContact.setDateAdded(docDate);
+//        et = (EditText) findViewById(R.id.postalText);
+//        selectedContact.setPostal(et.getText().toString());
+//        et = (EditText) findViewById(R.id.postalText2);
+//        selectedContact.setPostal2(et.getText().toString());
+//        et = (EditText) findViewById(R.id.cityText);
+//        selectedContact.setCity(et.getText().toString());
+//        et = (EditText) findViewById(R.id.stateText);
+//        selectedContact.setState(et.getText().toString());
+//        et = (EditText) findViewById(R.id.zipText);
+//        selectedContact.setZipCode(et.getText().toString());
 
         if(selectedContact.getFirstName().equals("") && selectedContact.getLastName().equals("")) {
-            Toast toast = Toast.makeText(getApplicationContext(), "Please fill in a name!", Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-            toast.show();
+            showToast("Please fill in a name!");
+        }
+//        else if(selectedContact.getPostal().equals("") && selectedContact.getPostal2().equals("") && selectedContact.getCity().equals("") && selectedContact.getState().equals("") && selectedContact.getZipCode().equals("")) {
+//            showToast("Please fill in address fields!");
+//        }
+        else if(!checkAddressFilled()) {
+            showToast("Please fill in adrress fields!");
         }
         else {
             //send the updated info back to the main activity
@@ -178,9 +197,43 @@ public class Main2Activity extends AppCompatActivity {
     }
 
     public void openMap(View view) {
-        //format the request for the reverse Geocoding
-        String address = selectedContact.getPostal().replaceAll("\\s","+") + "+" + selectedContact.getPostal2().replaceAll("\\s","+");
-        System.out.println(address);
-        //String reverseRequest = "http://maps.googleapis.com/maps/api/geocode/json?address=" + address + ",+"+selectedContact.getCity() + ",+" + selectedContact.getState() + "&sensor=true_or_false&key=\"" + key + "\"";
+
+//        if(selectedContact.getPostal().equals("") && selectedContact.getPostal2().equals("") && selectedContact.getCity().equals("") && selectedContact.getState().equals("") && selectedContact.getZipCode().equals("")) {
+//            showToast("Please fill in address fields!");
+//        }
+        if(!checkAddressFilled()) {
+            showToast("Please fill in address fields!");
+        }
+        else {
+            //format the request for the reverse Geocoding
+            String address = selectedContact.getPostal().replaceAll("\\s", "+") + "+" + selectedContact.getPostal2().replaceAll("\\s", "+");
+            System.out.println(address);
+            //String reverseRequest = "http://maps.googleapis.com/maps/api/geocode/json?address=" + address + ",+"+selectedContact.getCity() + ",+" + selectedContact.getState() + "&sensor=true_or_false&key=\"" + key + "\"";
+
+            Intent intent = new Intent(Main2Activity.this, MapActivity.class);
+            intent.putExtra("contactAddress", address);
+            Main2Activity.this.startActivity(intent);
+        }
+    }
+    public void showToast(String message) {
+        Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+        toast.show();
+    }
+    public Boolean checkAddressFilled() {
+        et = (EditText) findViewById(R.id.postalText);
+        selectedContact.setPostal(et.getText().toString());
+        et = (EditText) findViewById(R.id.postalText2);
+        selectedContact.setPostal2(et.getText().toString());
+        et = (EditText) findViewById(R.id.cityText);
+        selectedContact.setCity(et.getText().toString());
+        et = (EditText) findViewById(R.id.stateText);
+        selectedContact.setState(et.getText().toString());
+        et = (EditText) findViewById(R.id.zipText);
+        selectedContact.setZipCode(et.getText().toString());
+        if(selectedContact.getPostal().equals("") && selectedContact.getPostal2().equals("") && selectedContact.getCity().equals("") && selectedContact.getState().equals("") && selectedContact.getZipCode().equals("")) {
+            return false;
+        }
+        return true;
     }
 }
