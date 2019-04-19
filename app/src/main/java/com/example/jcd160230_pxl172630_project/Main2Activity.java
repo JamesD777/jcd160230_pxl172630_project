@@ -162,7 +162,7 @@ public class Main2Activity extends AppCompatActivity {
 //            showToast("Please fill in address fields!");
 //        }
         else if(!checkAddressFilled()) {
-            showToast("Please fill in adrress fields!");
+            showToast("Please fill in address fields!");
         }
         else {
             //send the updated info back to the main activity
@@ -206,7 +206,11 @@ public class Main2Activity extends AppCompatActivity {
         }
         else {
             //format the request for the reverse Geocoding
-            String address = selectedContact.getPostal().replaceAll("\\s", "+") + "+" + selectedContact.getPostal2().replaceAll("\\s", "+");
+            String address = selectedContact.getPostal().replaceAll("\\s", "+")
+                    + "+" + selectedContact.getPostal2().replaceAll("\\s", "+")
+                    + "+" + selectedContact.getCity().replaceAll("\\s", "+")
+                    + "+" + selectedContact.getState().replaceAll("\\s", "+")
+                    + "+" + selectedContact.getZipCode().replaceAll("\\s", "+");
             System.out.println(address);
             //String reverseRequest = "http://maps.googleapis.com/maps/api/geocode/json?address=" + address + ",+"+selectedContact.getCity() + ",+" + selectedContact.getState() + "&sensor=true_or_false&key=\"" + key + "\"";
 
@@ -231,7 +235,7 @@ public class Main2Activity extends AppCompatActivity {
         selectedContact.setState(et.getText().toString());
         et = (EditText) findViewById(R.id.zipText);
         selectedContact.setZipCode(et.getText().toString());
-        if(selectedContact.getPostal().equals("") && selectedContact.getPostal2().equals("") && selectedContact.getCity().equals("") && selectedContact.getState().equals("") && selectedContact.getZipCode().equals("")) {
+        if(selectedContact.getPostal().equals("") && selectedContact.getCity().equals("") && selectedContact.getState().equals("") && selectedContact.getZipCode().equals("")) {
             return false;
         }
         return true;

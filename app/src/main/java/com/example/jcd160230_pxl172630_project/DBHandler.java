@@ -169,8 +169,8 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(LAST_NAME, contact.getLastName());
         values.put(PHONE_NUMBER, contact.getPhoneNumber());
         values.put(BIRTH_DATE, contact.getBirthDate());
-        values.put(POSTAL_1, contact.getPostal2());
-        values.put(POSTAL_2, contact.getPostal());
+        values.put(POSTAL_1, contact.getPostal());
+        values.put(POSTAL_2, contact.getPostal2());
         values.put(CITY, contact.getCity());
         values.put(STATE, contact.getState());
         values.put(ZIPCODE, contact.getZipCode());

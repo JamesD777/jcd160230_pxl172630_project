@@ -10,6 +10,6 @@ public class MapActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-
+        String receivedAddress = getIntent().getStringExtra("contactAddress");
     }
 }
