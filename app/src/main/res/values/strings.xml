@@ -20,4 +20,5 @@
     <string name="state">State</string>
     <string name="zip_code">Zip Code</string>
     <string name="map_contact">Map Contact</string>
+    <string name="map_address">Map Address</string>
 </resources>
