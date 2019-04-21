@@ -45,13 +45,13 @@ public class MapFragment extends Fragment {
 
     }
 
-    GoogleMap map;
-    private String distance;
+    static GoogleMap map;
+    private static String distance;
     Geocoder geocoder;
     String bestProvider;
     List<Address> user = null;
-    double currentLat;
-    double currentLng;
+    static double currentLat;
+    static double currentLng;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -106,9 +106,9 @@ public class MapFragment extends Fragment {
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
-    public void updateMap(double lat, double lng){
+    public static void updateMap(double lat, double lng){
         CameraPosition currentLocation = CameraPosition.builder()
-                .target(new LatLng(this.currentLat,this.currentLng))
+                .target(new LatLng(currentLat,currentLng))
                 .zoom(10)
                 .bearing(0)
                 .tilt(45)
