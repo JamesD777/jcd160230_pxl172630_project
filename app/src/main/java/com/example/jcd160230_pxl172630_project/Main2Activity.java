@@ -205,16 +205,24 @@ public class Main2Activity extends AppCompatActivity {
             showToast("Please fill in address fields!");
         }
         else {
+            String api_key = getString(R.string.google_maps_key);
             //format the request for the reverse Geocoding
-            String address = "http://maps.googleapis.com/maps/api/geocode/json?address="
-                    + selectedContact.getPostal().replaceAll("\\s", "+")
-                    + "+" + selectedContact.getPostal2().replaceAll("\\s", "+")
-                    + "+" + selectedContact.getCity().replaceAll("\\s", "+")
-                    + "+" + selectedContact.getState().replaceAll("\\s", "+")
+
+            String combinedPostal = "";
+            if(selectedContact.getPostal2().equals("")) {
+                combinedPostal = selectedContact.getPostal().replaceAll("\\s", "+");
+            }
+            else {
+                combinedPostal = selectedContact.getPostal().replaceAll("\\s", "+")
+                        + "+" + selectedContact.getPostal2().replaceAll("\\s", "+");
+             }
+            String address = "https://maps.googleapis.com/maps/api/geocode/json?address="
+                    + combinedPostal
+                    + ",+" + selectedContact.getCity().replaceAll("\\s", "+")
+                    + ",+" + selectedContact.getState().replaceAll("\\s", "+")
                     + "+" + selectedContact.getZipCode().replaceAll("\\s", "+")
-                    + "&sensor=true_or_false&key=\""
-                    +  R.string.google_maps_key
-                    + "\"";
+                    + "&sensor=true_or_false&key="
+                    +  api_key;
             System.out.println(address);
             //String reverseRequest = "http://maps.googleapis.com/maps/api/geocode/json?address=" + address + ",+"+selectedContact.getCity() + ",+" + selectedContact.getState() + "&sensor=true_or_false&key=\"" + key + "\"";
 
