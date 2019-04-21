@@ -61,25 +61,25 @@ public class MapFragment extends Fragment {
 
         LocationManager lm = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
 
-        Criteria criteria = new Criteria();
-        bestProvider = lm.getBestProvider(criteria, false);
-        if (ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {}
-        Location location = lm.getLastKnownLocation(bestProvider);
+//        Criteria criteria = new Criteria();
+//        bestProvider = lm.getBestProvider(criteria, false);
+//        if (ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {}
+//        Location location = lm.getLastKnownLocation(bestProvider);
 
-        if (location == null){
-            Toast.makeText(this.getActivity(),"Location Not found",Toast.LENGTH_LONG).show();
-        }else{
-            geocoder = new Geocoder(this.getActivity());
-            try {
-                user = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-                currentLat=(double)user.get(0).getLatitude();
-                currentLng=(double)user.get(0).getLongitude();
-                System.out.println(" DDD lat: " +currentLat+",  longitude: "+currentLng);
-
-            }catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+//        if (location == null){
+//            Toast.makeText(this.getActivity(),"Location Not found",Toast.LENGTH_LONG).show();
+//        }else{
+//            geocoder = new Geocoder(this.getActivity());
+//            try {
+//                user = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+//                currentLat=(double)user.get(0).getLatitude();
+//                currentLng=(double)user.get(0).getLongitude();
+//                System.out.println(" DDD lat: " +currentLat+",  longitude: "+currentLng);
+//
+//            }catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.frg);  //use SuppoprtMapFragment for using in fragment instead of activity  MapFragment = activity   SupportMapFragment = fragment
         mapFragment.getMapAsync(new OnMapReadyCallback() {
@@ -90,6 +90,17 @@ public class MapFragment extends Fragment {
 
                 mMap.clear(); //clear old markers
 
+                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
+                mMap.setMyLocationEnabled(true);
             }
         });
 
@@ -108,7 +119,7 @@ public class MapFragment extends Fragment {
 
     public static void updateMap(double lat, double lng){
         CameraPosition currentLocation = CameraPosition.builder()
-                .target(new LatLng(currentLat,currentLng))
+                .target(new LatLng(lat,lng))
                 .zoom(10)
                 .bearing(0)
                 .tilt(45)
