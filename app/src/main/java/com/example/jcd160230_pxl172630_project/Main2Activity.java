@@ -206,11 +206,15 @@ public class Main2Activity extends AppCompatActivity {
         }
         else {
             //format the request for the reverse Geocoding
-            String address = selectedContact.getPostal().replaceAll("\\s", "+")
+            String address = "http://maps.googleapis.com/maps/api/geocode/json?address="
+                    + selectedContact.getPostal().replaceAll("\\s", "+")
                     + "+" + selectedContact.getPostal2().replaceAll("\\s", "+")
                     + "+" + selectedContact.getCity().replaceAll("\\s", "+")
                     + "+" + selectedContact.getState().replaceAll("\\s", "+")
-                    + "+" + selectedContact.getZipCode().replaceAll("\\s", "+");
+                    + "+" + selectedContact.getZipCode().replaceAll("\\s", "+")
+                    + "&sensor=true_or_false&key=\""
+                    +  R.string.google_maps_key
+                    + "\"";
             System.out.println(address);
             //String reverseRequest = "http://maps.googleapis.com/maps/api/geocode/json?address=" + address + ",+"+selectedContact.getCity() + ",+" + selectedContact.getState() + "&sensor=true_or_false&key=\"" + key + "\"";
 
