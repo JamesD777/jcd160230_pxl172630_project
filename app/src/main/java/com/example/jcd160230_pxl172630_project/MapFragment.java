@@ -191,6 +191,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
      * ****************************************************************************/
     public static void displayDistance(Location address, Location currentLoc) {
         float distance = currentLoc.distanceTo(address);
-        distanceText.setText("Distance to address: " + Math.round(distance) + "m");
+        distanceText.setText("Distance to address: " + Math.round(distance) + "m"
+        + "\nLatitude: " + address.getLatitude() + "\nLongitude: " + address.getLongitude());
     }
 }
