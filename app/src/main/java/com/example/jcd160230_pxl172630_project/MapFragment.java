@@ -189,7 +189,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     public void onProviderDisabled(String provider) {
 
     }
-
+    /****************************************************************************
+     * Calculate the distance between our current location and the address
+     * Author: Perry Lee
+     * ****************************************************************************/
     public static void displayDistance(Location address, Location currentLoc) {
         float distance = currentLoc.distanceTo(address);
         distanceText.setText("Distance to address: " + Math.round(distance) + "m");
