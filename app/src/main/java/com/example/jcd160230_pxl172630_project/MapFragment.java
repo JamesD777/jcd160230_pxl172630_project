@@ -23,6 +23,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -58,6 +60,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     private LocationManager locationManager;
     public static Location location;
 
+    public static TextView distanceText;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -69,6 +73,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             //location permissions are not there.
             PermissionsHelper.requestAllPermissions(getActivity());
         }
+
+        distanceText = (TextView)rootView.findViewById(R.id.distanceText);
 
         locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
@@ -115,6 +121,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                     .position(new LatLng(currentLat, currentLng))
                     .title("Address"));
         }
+
+        Location address = new Location("Address");
+        address.setLatitude(currentLat);
+        address.setLongitude(currentLng);
+        displayDistance(address, location);
     }
 
     @Override
@@ -161,4 +172,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
     }
 
+    public static void displayDistance(Location address, Location currentLoc) {
+        float distance = currentLoc.distanceTo(address);
+        distanceText.setText("Distance to address: " + Math.round(distance) + "m");
+    }
 }

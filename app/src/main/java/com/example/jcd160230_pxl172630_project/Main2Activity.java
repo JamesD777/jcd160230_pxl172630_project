@@ -228,16 +228,16 @@ public class Main2Activity extends AppCompatActivity {
         toast.show();
     }
     public Boolean checkAddressFilled() {
-        et = (EditText) findViewById(R.id.postalText);
-        selectedContact.setPostal(et.getText().toString());
-        et = (EditText) findViewById(R.id.postalText2);
-        selectedContact.setPostal2(et.getText().toString());
-        et = (EditText) findViewById(R.id.cityText);
-        selectedContact.setCity(et.getText().toString());
-        et = (EditText) findViewById(R.id.stateText);
-        selectedContact.setState(et.getText().toString());
-        et = (EditText) findViewById(R.id.zipText);
-        selectedContact.setZipCode(et.getText().toString());
+        EditText tempPostal = (EditText) findViewById(R.id.postalText);
+        selectedContact.setPostal(tempPostal.getText().toString());
+        EditText tempPostal2 = (EditText) findViewById(R.id.postalText2);
+        selectedContact.setPostal2(tempPostal2.getText().toString());
+        EditText tempCity = (EditText) findViewById(R.id.cityText);
+        selectedContact.setCity(tempCity.getText().toString());
+        EditText tempState = (EditText) findViewById(R.id.stateText);
+        selectedContact.setState(tempState.getText().toString());
+        EditText tempZip = (EditText) findViewById(R.id.zipText);
+        selectedContact.setZipCode(tempZip.getText().toString());
         if(selectedContact.getPostal().equals("") && selectedContact.getCity().equals("") && selectedContact.getState().equals("") && selectedContact.getZipCode().equals("")) {
             return false;
         }

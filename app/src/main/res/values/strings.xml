@@ -21,4 +21,5 @@
     <string name="zip_code">Zip Code</string>
     <string name="map_contact">Map Contact</string>
     <string name="map_address">Map Address</string>
+    <string name="distance_to_location">Distance to location</string>
 </resources>
