@@ -1,6 +1,7 @@
 package com.example.jcd160230_pxl172630_project;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -28,6 +29,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 
 public class MapFragment extends Fragment implements OnMapReadyCallback{
@@ -112,18 +114,29 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
 
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
         map.clear(); //clear old markers
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        this.fusedLocationClient.getLastLocation();
-        currentLat = location.getLatitude();
-        currentLng = location.getLongitude();
+
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(getActivity(), (OnSuccessListener<Location>) location -> {
+                    // Got last known location. In some rare situations this can be null.
+                    if (location != null) {
+                        currentLat = location.getLatitude();
+                        currentLng = location.getLongitude();
+                    }
+                    else{
+                        currentLat = 32.9807681;
+                        currentLng = -96.75475;
+                        System.out.println("DEFAULT VALUES");
+                    }
+                });
+        System.out.println(currentLat);
+        System.out.println(currentLng);
 
         CameraPosition currentLocation = CameraPosition.builder()
                 .target(new LatLng(currentLat,currentLng))
