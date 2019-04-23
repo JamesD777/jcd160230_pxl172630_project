@@ -27,16 +27,26 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
-
+/****************************************************************************
+ * Pings google's geocoding with the given address and returns the lat and lng
+ * Author: James Dunlap, heavily borrowed from a stackoverflow answer
+ * ****************************************************************************/
 public class AsyncMapActivity extends AsyncTask<String, Void, String[]> {
     private WeakReference<Context> contextRef;
     private String response;
-
+    /****************************************************************************
+     * Get the address from the map activity
+     * Author: James Dunlap
+     * ****************************************************************************/
     public AsyncMapActivity(Context context, String response) {
         contextRef = new WeakReference<>(context);
         this.response = response;
     }
     private ProgressDialog dialog;
+    /****************************************************************************
+     * Start a dialog box that finishes once the async task is done
+     * Author: James Dunlap, heavily borrowed from a stackoverflow answer
+     * ****************************************************************************/
     @Override
     protected void onPreExecute() {
         Context context = contextRef.get();
@@ -46,7 +56,10 @@ public class AsyncMapActivity extends AsyncTask<String, Void, String[]> {
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
     }
-
+    /****************************************************************************
+     * Ping the url and get the json response
+     * Author: James Dunlap, heavily borrowed from a stackoverflow answer
+     * ****************************************************************************/
     @Override
     protected String[] doInBackground(String... params) {
         String response;
@@ -58,12 +71,15 @@ public class AsyncMapActivity extends AsyncTask<String, Void, String[]> {
             return new String[]{"error"};
         }
     }
-
+    /****************************************************************************
+     * Once the json has been retrieved, parse the lg and lat and send it to the map fragment
+     * Author: James Dunlap, heavily borrowed from a stackoverflow answer
+     * ****************************************************************************/
     @Override
     protected void onPostExecute(String... result) {
         try {
             JSONObject jsonObject = new JSONObject(result[0]);
-
+            //parse json
             double lng = ((JSONArray) jsonObject.get("results")).getJSONObject(0)
                     .getJSONObject("geometry").getJSONObject("location")
                     .getDouble("lng");
@@ -72,8 +88,6 @@ public class AsyncMapActivity extends AsyncTask<String, Void, String[]> {
                     .getJSONObject("geometry").getJSONObject("location")
                     .getDouble("lat");
 
-            Log.d("latitude", "" + lat);
-            Log.d("longitude", "" + lng);
             MapFragment.updateMap(lat, lng);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -83,13 +97,16 @@ public class AsyncMapActivity extends AsyncTask<String, Void, String[]> {
         }
     }
 
-
+    /****************************************************************************
+     * Pings google's geocoding with the given address and returns the lat and lng
+     * Author: James Dunlap, heavily borrowed from a stackoverflow answer
+     * ****************************************************************************/
     private String getLatLongByURL(String requestURL) {
         URL url;
         String response = "";
         try {
             url = new URL(requestURL);
-
+            //basic url connecting
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setReadTimeout(15000);
             conn.setConnectTimeout(15000);
@@ -99,7 +116,7 @@ public class AsyncMapActivity extends AsyncTask<String, Void, String[]> {
                     "application/x-www-form-urlencoded");
             conn.setDoOutput(true);
             int responseCode = conn.getResponseCode();
-
+            //if the server responds well, read the json
             if (responseCode == HttpsURLConnection.HTTP_OK) {
                 String line;
                 BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));

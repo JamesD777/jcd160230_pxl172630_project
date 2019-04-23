@@ -144,23 +144,10 @@ public class Main2Activity extends AppCompatActivity {
         selectedContact.setPhoneNumber(et.getText().toString());
         selectedContact.setBirthDate(dobDate);
         selectedContact.setDateAdded(docDate);
-//        et = (EditText) findViewById(R.id.postalText);
-//        selectedContact.setPostal(et.getText().toString());
-//        et = (EditText) findViewById(R.id.postalText2);
-//        selectedContact.setPostal2(et.getText().toString());
-//        et = (EditText) findViewById(R.id.cityText);
-//        selectedContact.setCity(et.getText().toString());
-//        et = (EditText) findViewById(R.id.stateText);
-//        selectedContact.setState(et.getText().toString());
-//        et = (EditText) findViewById(R.id.zipText);
-//        selectedContact.setZipCode(et.getText().toString());
 
         if(selectedContact.getFirstName().equals("") && selectedContact.getLastName().equals("")) {
             showToast("Please fill in a name!");
         }
-//        else if(selectedContact.getPostal().equals("") && selectedContact.getPostal2().equals("") && selectedContact.getCity().equals("") && selectedContact.getState().equals("") && selectedContact.getZipCode().equals("")) {
-//            showToast("Please fill in address fields!");
-//        }
         else if(!checkAddressFilled()) {
             showToast("Please fill in address fields!");
         }
@@ -195,7 +182,10 @@ public class Main2Activity extends AppCompatActivity {
         }
 
     }
-
+    /****************************************************************************
+     * Open the map activity and give it the correctly formatted URL for the geocoding
+     * Author: James Dunlap, Perry Lee
+     * ****************************************************************************/
     public void openMap(View view) {
         String api_key = getString(R.string.google_maps_key);
         //format the request for the reverse Geocoding
@@ -216,17 +206,24 @@ public class Main2Activity extends AppCompatActivity {
                 + "&sensor=true_or_false&key="
                 +  api_key;
         System.out.println(address);
-        //String reverseRequest = "http://maps.googleapis.com/maps/api/geocode/json?address=" + address + ",+"+selectedContact.getCity() + ",+" + selectedContact.getState() + "&sensor=true_or_false&key=\"" + key + "\"";
-
+        //open map activity
         Intent intent = new Intent(Main2Activity.this, MapActivity.class);
         intent.putExtra("contactAddress", address);
         Main2Activity.this.startActivity(intent);
     }
+    /****************************************************************************
+     * Make sure the gravity is in the middle of the screen for the toast
+     * Author: Perry Lee
+     * ****************************************************************************/
     public void showToast(String message) {
         Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
         toast.show();
     }
+    /****************************************************************************
+     * Get the info for the addresses' edit texts
+     * Author: James Dunlap
+     * ****************************************************************************/
     public Boolean checkAddressFilled() {
         EditText tempPostal = (EditText) findViewById(R.id.postalText);
         selectedContact.setPostal(tempPostal.getText().toString());
