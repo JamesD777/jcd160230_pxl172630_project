@@ -126,6 +126,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         address.setLatitude(currentLat);
         address.setLongitude(currentLng);
         displayDistance(address, location);
+
+        map.addMarker(new MarkerOptions()
+                .position(new LatLng(currentLat, currentLng))
+                .title("Address"));
     }
 
     @Override
