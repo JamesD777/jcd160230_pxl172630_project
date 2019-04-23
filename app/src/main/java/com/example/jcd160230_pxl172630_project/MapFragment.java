@@ -128,15 +128,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
         map.clear(); //clear old markers
-
-        CameraPosition currentLocation = CameraPosition.builder()
-                .target(new LatLng(currentLat,currentLng))
-                .zoom(15)
-                .bearing(0)
-                .tilt(45)
-                .build();
-
-        map.animateCamera(CameraUpdateFactory.newCameraPosition(currentLocation), 10000, null);
     }
 
     @Override
