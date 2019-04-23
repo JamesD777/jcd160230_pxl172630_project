@@ -112,8 +112,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         currentLng = lng;
         currentLat = lat;
         if (location != null) {
-            LatLng marker = new LatLng(lat, lng);
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(marker, 15));
+            CameraPosition currentLocation = CameraPosition.builder()
+                    .target(new LatLng(currentLat,currentLng))
+                    .zoom(15)
+                    .bearing(0)
+                    .tilt(45)
+                    .build();
+
+            map.animateCamera(CameraUpdateFactory.newCameraPosition(currentLocation), 5000, null);
+            //.moveCamera(CameraUpdateFactory.newLatLngZoom(marker, 15));
         }
 
         map.addMarker(new MarkerOptions()
