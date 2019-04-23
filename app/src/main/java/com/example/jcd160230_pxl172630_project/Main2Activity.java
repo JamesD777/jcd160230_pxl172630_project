@@ -190,6 +190,8 @@ public class Main2Activity extends AppCompatActivity {
         String api_key = getString(R.string.google_maps_key);
         //format the request for the reverse Geocoding
 
+        checkAddressFilled();
+
         String combinedPostal = "";
         if(selectedContact.getPostal2().equals("")) {
             combinedPostal = selectedContact.getPostal().replaceAll("\\s", "+");
