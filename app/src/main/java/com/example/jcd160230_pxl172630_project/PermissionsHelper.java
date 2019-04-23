@@ -18,13 +18,8 @@ public class PermissionsHelper implements ActivityCompat.OnRequestPermissionsRes
 
     private static final int PERMISSION_ALL = 1;
     private static String[] PERMISSIONS = {
-            Manifest.permission.CAMERA,
             Manifest.permission.ACCESS_FINE_LOCATION
     };
-
-    //public PermissionsHelper(String whichPermission) {
-    //    MANIFEST_PERMISSION += whichPermission;
-    //}
 
     public static boolean hasPermissions(Context context, String... permissions) {
         if(context != null && permissions != null) {
