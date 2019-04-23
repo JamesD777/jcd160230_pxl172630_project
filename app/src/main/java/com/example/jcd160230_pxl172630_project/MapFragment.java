@@ -25,8 +25,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -35,16 +33,21 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-
+/****************************************************************************
+ * Show a google map on the screen, at the location of the contact's address
+ * Author: James Dunlap
+ * ****************************************************************************/
 public class MapFragment extends Fragment implements OnMapReadyCallback, LocationListener{
 
     public MapFragment() {// Required empty public constructor
         }
-
+    /****************************************************************************
+     * basic on create function
+     * Author: James Dunlap
+     * ****************************************************************************/
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     static GoogleMap map;
@@ -52,12 +55,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     static double currentLng;
     String mprovider;
 
-    private FusedLocationProviderClient fusedLocationClient;
-
-    private LocationListener locationListener;
-    private LocationManager locationManager;
     public static Location location;
-
+    /****************************************************************************
+     * When the fragment is created, request permissions, set up the location manager,
+     * and create the map
+     * Author: James Dunlap
+     * ****************************************************************************/
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -70,11 +73,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             PermissionsHelper.requestAllPermissions(getActivity());
         }
 
-        locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+        LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
 
         mprovider = locationManager.getBestProvider(criteria, false);
-
+        //set up the location manager
         if (mprovider != null && !mprovider.equals("")) {
             if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return rootView;
@@ -87,9 +90,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             else
                 Toast.makeText(getContext(), "No Location Provider Found Check Your Code", Toast.LENGTH_SHORT).show();
         }
-
-
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
+        //set up the google map
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.frg);  //use SuppoprtMapFragment for using in fragment instead of activity  MapFragment = activity   SupportMapFragment = fragment
         mapFragment.getMapAsync(this);
 
@@ -97,13 +98,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
         return rootView;
     }
-
+    /****************************************************************************
+     * Updates the map to be the location of the address given, called after
+     * asyncmapactivity is finished
+     * Author: James Dunlap
+     * ****************************************************************************/
     public static void updateMap(double lat, double lng) {
         currentLng = lng;
         currentLat = lat;
-        if (location != null && map != null) {
+        if (location != null && map != null) {//if the map exists
             map.clear(); //clear old markers
-            CameraPosition currentLocation = CameraPosition.builder()
+            CameraPosition currentLocation = CameraPosition.builder() //move camera to the address
                     .target(new LatLng(currentLat,currentLng))
                     .zoom(15)
                     .bearing(0)
@@ -116,7 +121,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                     .title("Address"));
         }
     }
-
+    /****************************************************************************
+     * Create the map. Set the location to be the current location, either 0,0 or
+     * the given address depending on if mapasync is done
+     * Author: James Dunlap
+     * ****************************************************************************/
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
@@ -137,7 +146,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                 .position(new LatLng(currentLat, currentLng))
                 .title("Address"));
     }
-
+    /****************************************************************************
+     * Location listener, updates the current lat/long of the user
+     * Author: James Dunlap
+     * ****************************************************************************/
     @Override
     public void onLocationChanged(Location loc) {
         location = loc;

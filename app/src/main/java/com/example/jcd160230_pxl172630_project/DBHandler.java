@@ -47,7 +47,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
     /****************************************************************************
      * Oncreate function for the dbhandler, sets up the contacts table
-     * Author: Perry Lee
+     * Author: Perry Lee, James Dunlap
      * ****************************************************************************/
     public void onCreate(SQLiteDatabase database) {
         String CREATE_CONTACTS_TABLE = "CREATE TABLE " + CONTACTS_TABLE + " ("
@@ -103,7 +103,7 @@ public class DBHandler extends SQLiteOpenHelper {
     /****************************************************************************
      * Get the contact of a specific person from the database using their ID. Called
      * when you want to modify their data
-     * Author: Perry Lee
+     * Author: Perry Lee, James Dunlap
      * ****************************************************************************/
     Contact getContact(int id) {
         SQLiteDatabase database = this.getReadableDatabase();
@@ -127,7 +127,7 @@ public class DBHandler extends SQLiteOpenHelper {
     }
     /****************************************************************************
      * Get all of the contacts from the database, called when populating list initially
-     * Author: Perry Lee
+     * Author: Perry Lee, James Dunlap
      * ****************************************************************************/
     public ArrayList<Contact> getAllContacts() {
         ArrayList<Contact> contactList = new ArrayList<Contact>();
@@ -159,7 +159,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
     /****************************************************************************
      * Update a contact in the database with new data
-     * Author: Perry Lee
+     * Author: Perry Lee, James Dunlap
      * ****************************************************************************/
     public int updateContact(Contact contact) {
         SQLiteDatabase database = getWritableDatabase();

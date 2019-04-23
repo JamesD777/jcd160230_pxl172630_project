@@ -18,11 +18,14 @@ import android.os.Bundle;
 
 
 /****************************************************************************
- * 
+ * Opens when the map address button is clicked in a contact, spawns a map fragment
  * Author: James Dunlap
  * ****************************************************************************/
 public class MapActivity extends AppCompatActivity {
-
+    /****************************************************************************
+     * Spawns the map fragment and starts the async map activity for geocoding
+     * Author: James Dunlap
+     * ****************************************************************************/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,7 +35,10 @@ public class MapActivity extends AppCompatActivity {
         addFragment(new MapFragment(), false, "one");
         new AsyncMapActivity(MapActivity.this, receivedAddress).execute();
     }
-
+    /****************************************************************************
+     * Adds the map fragment to the screen
+     * Author: James Dunlap
+     * ****************************************************************************/
     public void addFragment(Fragment fragment, boolean addToBackStack, String tag) {
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction ft = manager.beginTransaction();
