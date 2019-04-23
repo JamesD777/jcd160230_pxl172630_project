@@ -1,12 +1,18 @@
+/******************************************************************************
+ * This is an application written for 4301.002, to display a contact list in an
+ * android app that is modifiable by the user. It has a list that opens up a
+ * specific contact's info when you click their name. This contact information
+ * can be modified by the user and is saved to a sqlite database when the save
+ * button is clicked.
+ *
+ * Written by James Dunlap(jcd160230) and Perry Lee (pxl172630) at The University
+ * of Texas at Dallas starting March 4, 2019, for an Android development course.
+ ******************************************************************************/
 package com.example.jcd160230_pxl172630_project;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -14,7 +20,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,21 +31,15 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
-
-import static android.support.v4.content.ContextCompat.getSystemService;
 
 
 public class MapFragment extends Fragment implements OnMapReadyCallback, LocationListener{
 
-    public MapFragment() {
-        // Required empty public constructor
-    }
+    public MapFragment() {// Required empty public constructor
+        }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -99,19 +98,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         return rootView;
     }
 
-    private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
-        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
-        vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
-        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        vectorDrawable.draw(canvas);
-        return BitmapDescriptorFactory.fromBitmap(bitmap);
-    }
-
     public static void updateMap(double lat, double lng) {
         currentLng = lng;
         currentLat = lat;
         if (location != null && map != null) {
+            map.clear(); //clear old markers
             CameraPosition currentLocation = CameraPosition.builder()
                     .target(new LatLng(currentLat,currentLng))
                     .zoom(15)
