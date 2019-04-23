@@ -109,14 +109,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     }
 
     public static void updateMap(double lat, double lng) {
+        currentLng = lng;
+        currentLat = lat;
         if (location != null) {
-            LatLng marker = new LatLng(lat, lng);
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(marker, 15));
+            //LatLng marker = new LatLng(lat, lng);
+            //map.moveCamera(CameraUpdateFactory.newLatLngZoom(marker, 15));
         }
 
-        map.addMarker(new MarkerOptions()
+        /*map.addMarker(new MarkerOptions()
                 .position(new LatLng(lat, lng))
-                .title("Address"));
+                .title("Address"));*/
 
     }
 
@@ -143,8 +145,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                         System.out.println("DEFAULT VALUES");
                     }
                 });*/
-        currentLat = 32.9807681;
-        currentLng = -96.75475;
 
         CameraPosition currentLocation = CameraPosition.builder()
                 .target(new LatLng(currentLat,currentLng))
