@@ -131,7 +131,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
         CameraPosition currentLocation = CameraPosition.builder()
                 .target(new LatLng(currentLat,currentLng))
-                .zoom(10)
+                .zoom(15)
                 .bearing(0)
                 .tilt(45)
                 .build();
