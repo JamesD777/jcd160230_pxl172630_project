@@ -32,7 +32,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 
-public class MapFragment extends Fragment implements OnMapReadyCallback{
+public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     public MapFragment() {
         // Required empty public constructor
@@ -59,10 +59,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
 
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
+
+        // Request Camera and Location permissions from user
+        if (!PermissionsHelper.hasWhichPermission(getActivity())) {
+            //location permissions are not there.
+            PermissionsHelper.requestAllPermissions(getActivity());
+        }
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.frg);  //use SuppoprtMapFragment for using in fragment instead of activity  MapFragment = activity   SupportMapFragment = fragment
         mapFragment.getMapAsync(this);
-
 
 
         locationListener = new LocationListener() {
@@ -102,19 +108,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
-    public static void updateMap(double lat, double lng){
+    public static void updateMap(double lat, double lng) {
         if (location != null) {
             LatLng marker = new LatLng(lat, lng);
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(marker, 15));
         }
 
         map.addMarker(new MarkerOptions()
-                .position(new LatLng(lat,lng))
+                .position(new LatLng(lat, lng))
                 .title("Address"));
 
     }
 
-    @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
@@ -122,14 +127,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
 
         map.clear(); //clear old markers
 
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
         fusedLocationClient.getLastLocation()
-                .addOnSuccessListener(getActivity(), (OnSuccessListener<Location>) location -> {
+                .addOnSuccessListener(getActivity(), location -> {
                     // Got last known location. In some rare situations this can be null.
                     if (location != null) {
                         currentLat = location.getLatitude();
                         currentLng = location.getLongitude();
-                    }
-                    else{
+                    } else {
                         currentLat = 32.9807681;
                         currentLng = -96.75475;
                         System.out.println("DEFAULT VALUES");
