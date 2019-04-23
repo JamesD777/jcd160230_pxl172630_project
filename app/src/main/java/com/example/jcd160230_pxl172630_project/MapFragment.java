@@ -111,7 +111,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     public static void updateMap(double lat, double lng) {
         currentLng = lng;
         currentLat = lat;
-        if (location != null) {
+        if (location != null && map != null) {
             CameraPosition currentLocation = CameraPosition.builder()
                     .target(new LatLng(currentLat,currentLng))
                     .zoom(15)
@@ -120,13 +120,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                     .build();
 
             map.animateCamera(CameraUpdateFactory.newCameraPosition(currentLocation), 5000, null);
-            //.moveCamera(CameraUpdateFactory.newLatLngZoom(marker, 15));
+            map.addMarker(new MarkerOptions()
+                    .position(new LatLng(currentLat, currentLng))
+                    .title("Address"));
         }
-
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(lat, lng))
-                .title("Address"));
-
     }
 
     @Override
@@ -135,6 +132,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
         map.clear(); //clear old markers
+
+        CameraPosition currentLocation = CameraPosition.builder()
+                .target(new LatLng(currentLat,currentLng))
+                .zoom(15)
+                .bearing(0)
+                .tilt(45)
+                .build();
+
+        map.animateCamera(CameraUpdateFactory.newCameraPosition(currentLocation), 5000, null);
+
+        map.addMarker(new MarkerOptions()
+                .position(new LatLng(currentLat, currentLng))
+                .title("Address"));
     }
 
     @Override

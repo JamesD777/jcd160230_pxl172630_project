@@ -64,11 +64,8 @@ public class AsyncMapActivity extends AsyncTask<String, Void, String[]> {
 
             Log.d("latitude", "" + lat);
             Log.d("longitude", "" + lng);
-            wait(5000);
             MapFragment.updateMap(lat, lng);
         } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
             e.printStackTrace();
         }
         if (dialog.isShowing()) {
